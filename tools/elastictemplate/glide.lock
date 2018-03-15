@@ -1,0 +1,6 @@
+hash: 8809519c17c6120bfdea171c74fb282a76cd5500524c26765840d1bd7440a84c
+updated: 2018-03-15T13:47:36.456752629+01:00
+imports:
+- name: github.com/google/subcommands
+  version: ce3d4cfc062faac7115d44e5befec8b5a08c3faa
+testImports: []

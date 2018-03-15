@@ -1,0 +1,3 @@
+package: github.com/Azure/helm-elasticstack/tools/elastictemplate
+import:
+- package: github.com/google/subcommands
