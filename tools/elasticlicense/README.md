@@ -5,7 +5,7 @@ This is a tool which can be used to install the x-pack license into an Elasticse
 ## Installation
 
 ```bash
-go get Azure/helm-elasticstack/tools/elasticlicense
+go get github.com/Azure/helm-elasticstack/tools/elasticlicense
 ```
 
 Alternatively you can build the docker image by cloning the repository and executing the following command:
