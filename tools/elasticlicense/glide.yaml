@@ -1,0 +1,3 @@
+package: github.com/Azure/helm-elasticstack/tools/elasticlicense
+import:
+- package: github.com/google/subcommands
