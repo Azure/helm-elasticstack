@@ -13,7 +13,7 @@ test: bootstrap
 	go vet $(go list ./... | grep -v /vendor/)
 	golint -set_exit_status $(shell go list ./... | grep -v vendor)
 	gas ./...
-	go test -covermode=atomic -race -v $(go list ./... | grep -v /vendor/)
+	ginkgo -r -v
 bootstrap:
 	glide install
 build:

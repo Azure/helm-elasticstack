@@ -144,9 +144,9 @@ func (r *retrieveCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface
 		defer resp.Body.Close()
 
 		content, err := ioutil.ReadAll(resp.Body)
-		if resp.StatusCode != http.StatusOK || err == nil {
+		if resp.StatusCode != http.StatusOK || err != nil {
 			fmt.Printf("Failed to retrieve the template '%s'. Status Code: %d. Error: %v\n",
-				template, resp.StatusCode, string(content))
+				template, resp.StatusCode, err)
 			return subcommands.ExitFailure
 		}
 
