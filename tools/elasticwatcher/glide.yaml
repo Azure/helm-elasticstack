@@ -1,0 +1,7 @@
+package: github.com/Azure/helm-elasticstack/tools/elasticwatcher
+import:
+- package: github.com/google/subcommands
+- package: github.com/oliveagle/jsonpath
+- package: github.com/mohae/utilitybelt
+  subpackages:
+  - deepcopy

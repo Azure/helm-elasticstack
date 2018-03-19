@@ -1,0 +1,12 @@
+hash: b92463ff567a311bc225b12cf4c047fb0e518f8d1fac2f010d24255ca1f3038b
+updated: 2018-03-19T11:27:27.002842219+01:00
+imports:
+- name: github.com/google/subcommands
+  version: ce3d4cfc062faac7115d44e5befec8b5a08c3faa
+- name: github.com/mohae/utilitybelt
+  version: d4f15c760e5a10346e7a4f25537ae32d3c839d83
+  subpackages:
+  - deepcopy
+- name: github.com/oliveagle/jsonpath
+  version: fb37af168cad3ed23eeff46644814373cbadf472
+testImports: []
