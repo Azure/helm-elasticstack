@@ -14,7 +14,7 @@ Alternatively you can build the docker image by cloning the repository and execu
 make image
 ```
 
-## Usage 
+## Usage
 
 ```
 $> elasticwatcher help
