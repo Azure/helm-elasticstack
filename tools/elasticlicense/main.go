@@ -28,7 +28,7 @@ func loadBasicAuth(authFile string) (*basicAuth, error) {
 	file, err := ioutil.ReadFile(authFile)
 	if err != nil {
 		return nil, fmt.Errorf(`Failed to read the basic authentication
-		credetials from the file: %v`, err)
+		credentials from the file: %v`, err)
 	}
 
 	var auth basicAuth
@@ -65,7 +65,7 @@ func (*viewCmd) Name() string     { return "view" }
 func (*viewCmd) Synopsis() string { return "Display the installed license in Elasticsearch" }
 func (*viewCmd) Usage() string {
 	return `view [-host] <host name> [-port] <port> [-auth-file] <basic auth file path>:
-	Dispaly the installed license to stdout
+	Display the installed license to stdout
 	`
 }
 
