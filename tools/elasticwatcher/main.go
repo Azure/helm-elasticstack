@@ -53,7 +53,7 @@ func loadBasicAuth(authFile string) (*BasicAuth, error) {
 	file, err := ioutil.ReadFile(authFile)
 	if err != nil {
 		return nil, fmt.Errorf(`Failed to read the basic authentication
-		credetials from the file: %v`, err)
+		credentials from the file: %v`, err)
 	}
 
 	var auth BasicAuth
