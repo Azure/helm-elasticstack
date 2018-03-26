@@ -69,7 +69,7 @@ es_client:
 es_data:
   replicas: "1"
   disk_capacity: "256Mi"
-  storageclass: standard
+  storageclass: default
   container:
     request:
       cpu: "250m"
