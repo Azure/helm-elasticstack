@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: es-limit-range
+  namespace: {{ .Release.Namespace }}
+spec:
+  limits:
+  - default:
+      memory: {{ .Values.es_cluster.container.limit.mem }}
+      cpu: {{ .Values.es_cluster.container.limit.cpu }}
+    defaultRequest:
+      memory: {{ .Values.es_cluster.container.request.mem }}
+      cpu: {{ .Values.es_cluster.container.request.cpu }}
+    type: Container

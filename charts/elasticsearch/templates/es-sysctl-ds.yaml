@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  namespace: {{ .Release.Namespace }}
+  labels:
+    k8s-app: es-sysctl-ds
+  name: es-sysctl-ds
+spec:
+  template:
+    metadata:
+      labels:
+        k8s-app: es-sysctl-ds
+    spec:
+      serviceAccount: elasticsearch
+      serviceAccountName: elasticsearch
+      containers:
+      - command:
+        - sh
+        - -c
+        - sysctl -w vm.max_map_count=262166 && while true; do sleep 86400; done
+        image: busybox:1.26.2
+        name: es-sysctl-ds
+        resources:
+          limits:
+            cpu: 10m
+            memory: 50Mi
+          requests:
+            cpu: 10m
+            memory: 50Mi
+        securityContext:
+          privileged: true
+      terminationGracePeriodSeconds: 1

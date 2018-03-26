@@ -1,0 +1,107 @@
+apiVersion: apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: es-data
+  namespace: {{ .Release.Namespace }}
+  labels:
+    component: elasticsearch
+    role: data
+spec:
+  serviceName: elasticsearch-data
+  replicas: {{ .Values.es_data.replicas | default 3 }}
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      component: elasticsearch
+      role: data
+  template:
+    metadata:
+      labels:
+        component: elasticsearch
+        role: data
+      annotations:
+        checksum/es-config: {{ include (print $.Template.BasePath "/config/config.yaml") . | sha256sum }}
+        {{- include "annotations" .Values }}
+    spec:
+      serviceAccount: elasticsearch
+      serviceAccountName: elasticsearch
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: es-data
+        securityContext:
+          privileged: false
+          capabilities:
+            add:
+              - IPC_LOCK
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+{{- range $key, $val := .Values.es_cluster.env_var }}
+        - name: {{ $key | quote }}
+          value: {{ $val | quote }}
+{{- end }}
+{{- range $key, $val := .Values.es_data.env_var }}
+        - name: {{ $key | quote }}
+          value: {{ $val | quote }}
+{{- end }}
+{{- if .Values.es_data.container }}
+        resources:
+{{- end }}
+{{- if .Values.es_data.container.limit }}
+          limits:
+            memory: {{ .Values.es_data.container.limit.mem | quote }}
+            cpu: {{ .Values.es_data.container.limit.cpu | quote }}
+{{- end }}
+{{- if .Values.es_data.container.request }}
+          requests:
+            memory: {{ .Values.es_data.container.request.mem | quote }}
+            cpu: {{ .Values.es_data.container.request.cpu | quote }}
+{{- end }}
+        ports:
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        readinessProbe:
+          tcpSocket:
+            port: 9300
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 9300
+          initialDelaySeconds: 120
+          periodSeconds: 15
+        volumeMounts:
+        - name: storage
+          mountPath: /data
+        - name: es-config
+          mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+          subPath: elasticsearch.yml
+      volumes:
+        - name: es-config
+          configMap:
+            name: es-configmap
+{{- if .Values.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+{{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      storageClassName: {{ .Values.es_data.storageclass | default "standard" | quote }}
+      accessModes: [ ReadWriteOnce ]
+      resources:
+        requests:
+          storage: {{ .Values.es_data.disk_capacity | default "1000Gi" | quote }}

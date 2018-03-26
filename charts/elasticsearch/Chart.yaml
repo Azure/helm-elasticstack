@@ -1,0 +1,7 @@
+apiVersion: v1
+name: elasticsearch
+version: 1.0.0
+description: Helm chart for Elasticsearch cluster 
+maintainers:
+  - name: Microsoft Social Engagement
+    email: msefoundations@microsoft.com

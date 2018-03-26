@@ -1,0 +1,87 @@
+image:
+  repository: docker.elastic.co/elasticsearch/elasticsearch
+  tag: 6.2.2
+  pullPolicy: Always
+
+license:
+  install: false
+  image:
+    repository: docker.io/mse/elasticlicense
+    tag: latest
+    pullPolicy: Always
+  value:
+
+storageclass:
+  azure: false
+
+es_cluster:
+  name: &CLUSTER_NAME "es-cluster"
+  plugins: "x-pack"
+  container:
+    request:
+      cpu: "250m"
+      mem: "256Mi"
+    limit:
+      cpu: "250m"
+      mem: "512Mi"
+  env_var:
+    CLUSTER_NAME: *CLUSTER_NAME
+    NUMBER_OF_MASTERS: 2
+    DISCOVERY_SERVICE: elasticsearch-discovery
+    NETWORK_HOST: "0.0.0.0"
+    NUMBER_OF_SHARDS: 3
+    NUMBER_OF_REPLICAS: 1
+    CLIENT_IGNORE_CLUSTER_NAME: false
+    HTTP_ENABLE: true
+    CLIENT_SNIFF: true
+    HTTP_CORS_ENABLE: true
+    HTTP_CORS_ALLOW_ORIGIN: "*"
+    MEMORY_LOCK: false
+    ES_PATH_CONF: "/elasticsearch/config"
+
+es_master:
+  replicas:  "2"
+  container:
+    request:
+      cpu: "250m"
+      mem: "256Mi"
+    limit:
+      cpu: "250m"
+      mem: "512Mi"
+  env_var:
+    ES_JAVA_OPTS: "-Xms256m -Xmx256m"
+    NODE_INGEST: false
+    NODE_DATA: false
+    NODE_MASTER: true
+
+es_client:
+  replicas: "1"
+  container:
+    request:
+      cpu: "250m"
+      mem: "256Mi"
+    limit:
+      cpu: "250m"
+      mem: "512Mi"
+  env_var:
+    ES_JAVA_OPTS: "-Xms256m -Xmx256m"
+    NODE_INGEST: true
+    NODE_DATA: false
+    NODE_MASTER: false
+
+es_data:
+  replicas: "1"
+  disk_capacity: "256Mi"
+  storageclass: standard
+  container:
+    request:
+      cpu: "250m"
+      mem: "256Mi"
+    limit:
+      cpu: "250m"
+      mem: "512Mi"
+  env_var:
+    ES_JAVA_OPTS: "-Xms256m -Xmx256m"
+    NODE_INGEST: false
+    NODE_DATA: true
+    NODE_MASTER: false

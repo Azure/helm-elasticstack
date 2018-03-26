@@ -1,0 +1,97 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: es-master
+  namespace: {{ .Release.Namespace }}
+  labels:
+    component: elasticsearch
+    role: master
+    nodename: es_master
+spec:
+  replicas: {{ .Values.es_master.replicas | default 3 }}
+  selector:
+    matchLabels:
+      component: elasticsearch
+      role: master
+  template:
+    metadata:
+      labels:
+        component: elasticsearch
+        role: master
+      annotations:
+        checksum/es-config: {{ include (print $.Template.BasePath "/config/config.yaml") . | sha256sum }}
+        {{- include "annotations" .Values }}
+    spec:
+      serviceAccount: elasticsearch
+      serviceAccountName: elasticsearch
+      containers:
+      - name: es-master
+        securityContext:
+          privileged: false
+          capabilities:
+            add:
+              - IPC_LOCK
+              - SYS_RESOURCE
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+{{- range $key, $val := .Values.es_cluster.env_var }}
+        - name: {{ $key | quote }}
+          value: {{ $val | quote }}
+{{- end }}
+{{- range $key, $val := .Values.es_master.env_var }}
+        - name: {{ $key | quote }}
+          value: {{ $val | quote }}
+{{- end }}
+{{- if .Values.es_master.container }}
+        resources:
+{{- end }}
+{{- if .Values.es_master.container.limit }}
+          limits:
+            memory: {{ .Values.es_master.container.limit.mem | quote }}
+            cpu: {{ .Values.es_master.container.limit.cpu | quote }}
+{{- end }}
+{{- if .Values.es_master.container.request }}
+          requests:
+            memory: {{ .Values.es_master.container.request.mem | quote }}
+            cpu: {{ .Values.es_master.container.request.cpu | quote }}
+{{- end }}
+        ports:
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        readinessProbe:
+          tcpSocket:
+            port: 9300
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 9300
+          initialDelaySeconds: 120
+          periodSeconds: 15
+        volumeMounts:
+        - name: storage
+          mountPath: /data
+        - name: es-config
+          mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+          subPath: elasticsearch.yml
+      volumes:
+        - name: es-config
+          configMap:
+            name: es-configmap
+        - emptyDir:
+            medium: ""
+          name: "storage"
+{{- if .Values.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+{{- end }}

@@ -1,0 +1,41 @@
+{{- if .Values.license.install -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: post-install-license-job
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    config/checksum: {{ include (print $.Template.BasePath "/post-install-license-secret.yaml") . | sha256sum }}
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "2"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: post-install-license-job
+    spec:
+      restartPolicy: Never
+      serviceAccount: elasticsearch
+      serviceAccountName: elasticsearch
+      containers:
+      - name: elasticlicense
+        image: {{ .Values.license.image.repository }}:{{ .Values.license.image.tag | default "latest" }}
+        imagePullPolicy: {{ .Values.license.image.pullPolicy }}
+        command: ["/usr/local/bin/elasticlicense"]
+        args:
+        - "install"
+        - "-host=elasticsearch"
+        - "-port=9200"
+        - "-license-file=/config/license.json"
+        volumeMounts:
+          - name: license-secret
+            mountPath: /config
+      volumes:
+        - name: license-secret
+          secret:
+            secretName: license-secret
+{{- if .Values.license.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.license.image.pullSecret }}
+{{- end }}
+{{- end -}}
