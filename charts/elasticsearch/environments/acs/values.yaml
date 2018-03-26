@@ -11,12 +11,6 @@ license:
     pullPolicy: Always
   value:
 
-cloud:
-  storage:
-    azure:
-      account: snapshots
-      key:
-
 es_cluster:
   name: &CLUSTER_NAME "es-cluster"
   plugins: "x-pack"
@@ -40,7 +34,7 @@ es_cluster:
     HTTP_CORS_ENABLE: true
     HTTP_CORS_ALLOW_ORIGIN: "*"
     MEMORY_LOCK: false
-    ES_PATH_CONF: "/elasticsearch/config"
+    ES_PATH_CONF: "/usr/share/elasticsearch/config"
     MAX_LOCAL_STORAGE_NODES: 1
 
 es_master:

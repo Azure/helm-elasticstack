@@ -34,7 +34,7 @@ es_cluster:
     HTTP_CORS_ENABLE: true
     HTTP_CORS_ALLOW_ORIGIN: "*"
     MEMORY_LOCK: false
-    ES_PATH_CONF: "/elasticsearch/config"
+    ES_PATH_CONF: "/usr/share/elasticsearch/config"
 
 es_master:
   replicas:  "2"

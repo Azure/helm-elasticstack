@@ -39,6 +39,7 @@ data:
       security:
         enabled: false
 
+{{- if .Values.cloud -}}
 {{- if .Values.cloud.storage.azure }}
     cloud:
         azure:
@@ -47,3 +48,4 @@ data:
                     account: {{- .Values.cloud.storage.azure.account }}
                     key: {{- .Values.cloud.storage.azure.key }}
 {{- end }}
+{{- end -}}
