@@ -55,7 +55,7 @@ You can validate if the chart is properly rendered using the command `helm templ
 The health of the Elasticsearch cluster can be checked after the deployment from any of the mater nodes.
 
 ```console
- kubectl exec -ti --namespace es-cluster es-master -- /bin/bash
+ kubectl exec -ti --namespace elk es-master -- /bin/bash
 ```
 
 You can then get the health status from Elasticsearch API:
@@ -86,7 +86,7 @@ curl http://localhost:9200/_cluster/health?pretty
 The data nodes can be easily scaled up/down with the following command:
 
 ```console
-kubectl scale --namespace es-cluster statefulset/es-data --replicas 10
+kubectl scale --namespace elk statefulset/es-data --replicas 10
 ```
 
 ## Access the Elasticsearch API
