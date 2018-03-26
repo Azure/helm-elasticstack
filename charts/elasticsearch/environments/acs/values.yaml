@@ -15,7 +15,7 @@ cloud:
   storage:
     azure:
       account: snapshots
-      key: secret
+      key:
 
 es_cluster:
   name: &CLUSTER_NAME "es-cluster"

@@ -11,9 +11,6 @@ license:
     pullPolicy: Always
   value:
 
-storageclass:
-  azure: false
-
 es_cluster:
   name: &CLUSTER_NAME "es-cluster"
   plugins: "x-pack"
