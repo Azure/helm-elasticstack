@@ -2,8 +2,8 @@
 
 # include some common functions
 current_dir="$(dirname $0)"
-"$current_dir/../../scripts/util.sh"
-"$current_dir/../../scripts/keyvault.sh"
+source "$current_dir/../../scripts/util.sh"
+source "$current_dir/../../scripts/keyvault.sh"
 
 function show_help() {
     cat <<EOF
@@ -59,11 +59,11 @@ helm_params=""
 # Check if the required command are installed
 echo "Checking kubectl command"
 type kubectl > /dev/null 2>&1
-check_return_code "kubectl command not found in \$PATH. Please follow the documentation to install it: https://kubernetes.io/docs/tasks/kubectl/install/"
+check_rc "kubectl command not found in \$PATH. Please follow the documentation to install it: https://kubernetes.io/docs/tasks/kubectl/install/"
 
 echo "Checking helm command"
 type helm > /dev/null 2>&1
-check_return_code "helm command not found in \$PATH. Please follow the documentation to install it: https://github.com/kubernetes/helm"
+check_rc "helm command not found in \$PATH. Please follow the documentation to install it: https://github.com/kubernetes/helm"
 
 # Read the Elasticsearch x-pack license file if defined
 if [ -e "$LICENSE" ]; then
