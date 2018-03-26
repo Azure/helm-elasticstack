@@ -38,6 +38,8 @@ data:
     xpack:
       security:
         enabled: false
+      monitoring:
+        enabled: false
 
 {{- if .Values.cloud -}}
 {{- if .Values.cloud.storage.azure }}
