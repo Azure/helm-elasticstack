@@ -1,6 +1,10 @@
+# Copyright (c) Microsoft and contributors.  All rights reserved.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
 #!/bin/bash
 
-# include some common functions
+# Include some common functions
 current_dir="$(dirname $0)"
 source "$current_dir/../../scripts/util.sh"
 source "$current_dir/../../scripts/keyvault.sh"
