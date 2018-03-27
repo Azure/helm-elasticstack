@@ -1,6 +1,6 @@
 image:
   repository: docker.elastic.co/elasticsearch/elasticsearch
-  tag: 6.2.2
+  tag: 6.2.3
   pullPolicy: Always
 
 license:
