@@ -7,6 +7,28 @@ It is based on [clockworksoul/helm-elasticsearch](https://github.com/clockworkso
 ## Prerequisites
  - Kubernetes 1.8+ e.g. deployed with [Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes)
 
+## Configuration
+
+The following table lists some of the configurable parameters of the `elasticsearch` chart and their default values:
+
+| Parameter                                      | Description                              | Default                                                   |
+| ---------------------------------              | -------------------------------------    | --------------------------------------------------------- |
+| `image.repository`                             | elasticsearch image                      | `docker.elastic.co/elasticsearch/elasticsearch`           |
+| `image.tag`                                    | specify image tag                        | `6.2.3`                                                   |
+| `image.pullSecrets`                            | specify image pull secrets               | `nil` (does not add image pull secrets to deployed pods)  |
+| `image.pullPolicy`                             | image pull policy                        | `Always`                                                  |
+| `license.install`                              | install x-pack license                   | `false`                                                   |
+| `license.image.repository`                     | elasticlicense tool image                | `docker.io/mse/elasticlicense`                            |
+| `license.image.tag`                            | elasticlicense tool image tag            | `latest`                                                  |
+| `license.image.pullPolicy`                     | elasticlicense tool image pull policy    | `Always`                                                  |
+| `license.value`                                | x-pack license                           | `nil` (must be provided during installation)              |
+| `es_master.replicas`                           | number of master nodes started           | `3`                                                       |
+| `es_client.replicas`                           | number of ingest nodes started           | `3`                                                       |
+| `es_data.replicas`                             | number of data nodes started             | `3`                                                       |
+| `es_data.disk_capacity`                        | size of the disk attacked to a data node | `100Gi`                                                   |
+| `es_data.storageclass`                         | data node disk storage class             | `managed-premium`                                         |
+| `es_master/es_client/es_data.env.ES_JAVA_OPTS` | Java VM options                          | `-Xms1g -Xmx1g`                                           |
+
 ## Installing the Chart
 
 The chart can be installed with the `deploy.sh` script. An environment and namespace can be provided as input. The script will use by default the `acs` environment and `elk` namespace.
