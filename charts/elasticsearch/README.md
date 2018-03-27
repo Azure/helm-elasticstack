@@ -12,7 +12,7 @@ It is based on [clockworksoul/helm-elasticsearch](https://github.com/clockworkso
 The following table lists some of the configurable parameters of the `elasticsearch` chart and their default values:
 
 | Parameter                                      | Description                              | Default                                                   |
-| ---------------------------------              | -------------------------------------    | --------------------------------------------------------- |
+| ---------------------------------------------- | ---------------------------------------- | --------------------------------------------------------- |
 | `image.repository`                             | elasticsearch image                      | `docker.elastic.co/elasticsearch/elasticsearch`           |
 | `image.tag`                                    | specify image tag                        | `6.2.3`                                                   |
 | `image.pullSecrets`                            | specify image pull secrets               | `nil` (does not add image pull secrets to deployed pods)  |
