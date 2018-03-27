@@ -63,7 +63,6 @@ es_client:
       mem: "2Gi"
   env_var:
     ES_JAVA_OPTS: "-Xms1g -Xmx1g"
-    NETWORK_HOST: "127.0.0.1"
     NODE_INGEST: true
     NODE_DATA: false
     NODE_MASTER: false
