@@ -18,7 +18,7 @@ The following table lists some of the configurable parameters of the `elasticsea
 | `image.pullSecrets`                            | specify image pull secrets               | `nil` (does not add image pull secrets to deployed pods)  |
 | `image.pullPolicy`                             | image pull policy                        | `Always`                                                  |
 | `license.install`                              | install x-pack license                   | `false`                                                   |
-| `license.image.repository`                     | elasticlicense tool image                | `docker.io/mse/elasticlicense`                            |
+| `license.image.repository`                     | elasticlicense tool image                | `mseoss/elasticlicense`                         |
 | `license.image.tag`                            | elasticlicense tool image tag            | `latest`                                                  |
 | `license.image.pullPolicy`                     | elasticlicense tool image pull policy    | `Always`                                                  |
 | `license.value`                                | x-pack license                           | `nil` (must be provided during installation)              |

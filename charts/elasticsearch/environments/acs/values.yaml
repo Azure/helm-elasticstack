@@ -6,7 +6,7 @@ image:
 license:
   install: false
   image:
-    repository: docker.io/mse/elasticlicense
+    repository: mseoss/elasticlicense
     tag: latest
     pullPolicy: Always
   value:

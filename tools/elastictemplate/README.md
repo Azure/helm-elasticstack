@@ -84,7 +84,7 @@ elstictemplate create -templates-file=templates.json -host=<ELASTICSEARCH-HOST> 
 or using a docker container:
 
 ```bash
-docker run --rm -v ${PWD}:/config -t docker.io/mse/elastictemplate create -templates-file=/config/templates.json \
+docker run --rm -v ${PWD}:/config -t mseoss/elastictemplate create -templates-file=/config/templates.json \
 -host=<ELASTICSEARCH-HOST> -port=<ELASTICSEARCH-PORT> -auth-file=/config/auth-file.json
 ```
 

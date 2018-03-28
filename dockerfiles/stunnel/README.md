@@ -8,8 +8,8 @@ The `VERSION` environment variable defines the version of the stunnel package.
 
 ```
 export VERSION=5.44
-docker build -t docker.io/mse/stunnel:${VERSION} --build-arg VERSION=${VERSION} .
-docker push docker.io/mse/stunnel:${VERSION}
+docker build -t mseoss/stunnel:${VERSION} --build-arg VERSION=${VERSION} .
+docker push mseoss/stunnel:${VERSION}
 ```
 
 # Run
@@ -17,5 +17,5 @@ docker push docker.io/mse/stunnel:${VERSION}
 stunnel can be started in a docker container with the following command:
 
 ```
-docker run docker.io/mse/stunnel:${VERSION}
+docker run mseoss/stunnel:${VERSION}
 ```

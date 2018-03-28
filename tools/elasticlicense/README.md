@@ -36,7 +36,7 @@ elasticlicense install -license-file=license.json -host=<ELASTICSEARCH-HOST> -po
 or run the tool in a docker container:
 
 ```bash
-docker run --rm -v ${PWD}:/config -t docker.io/mse/elasticlicense install -license-file=/config/license.json \
+docker run --rm -v ${PWD}:/config -t mseoss/elasticlicense install -license-file=/config/license.json \
 -host=<ELASTICSEARCH-HOST> -port=<ELASTICSEARCH-PORT> -auth-file=/config/auth-file.json
 ```
 

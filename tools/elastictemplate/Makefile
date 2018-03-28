@@ -1,7 +1,7 @@
 VERSION ?= $(shell git describe --always --tags)
 BIN = elastictemplate
 BUILD_CMD = go build -o build/$(BIN)-$(VERSION)-$${GOOS}-$${GOARCH} &
-IMAGE_REPO = docker.io/mse
+IMAGE_REPO = mseoss
 FMT_CMD = $(gofmt -s -l -w $(find . -type f -name '*.go' -not -path './vendor/*') | tee /dev/stderr)
 
 default:

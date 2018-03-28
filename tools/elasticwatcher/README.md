@@ -114,7 +114,7 @@ elasticwatcher create -watches-file=watches.json -host=<ELASTICSEARCH-HOST> -por
 or using a docker container:
 
 ```bash
-docker run --rm -v ${PWD}:/config -t docker.io/mse/elasticwatcher create -watches-file=/config/watches.json \
+docker run --rm -v ${PWD}:/config -t mseoss/elasticwatcher create -watches-file=/config/watches.json \
 -host=<ELASTICSEARCH-HOST> -port=<ELASTICSEARCH-PORT> -auth-file=/config/auth-file.json
 ```
 

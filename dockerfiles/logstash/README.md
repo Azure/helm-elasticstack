@@ -13,8 +13,8 @@ The `VERSION` environment variable defines the version of the logstash base imag
 
 ```
 export VERSION=6.2.3
-docker build -t docker.io/mse/logstash:${VERSION} --build-arg VERSION=${VERSION} .
-docker push docker.io/mse/logstash:${VERSION}
+docker build -t mseoss/logstash:${VERSION} --build-arg VERSION=${VERSION} .
+docker push mseoss/logstash:${VERSION}
 ```
 
 # Run
@@ -22,7 +22,7 @@ docker push docker.io/mse/logstash:${VERSION}
 Logstash image can be started for testing with the following command:
 
 ```
-docker run --rm -it -v ~/pipeline/:/usr/share/logstash/pipeline/ docker.io/mse/logstash:${VERSION}
+docker run --rm -it -v ~/pipeline/:/usr/share/logstash/pipeline/ mseoss/logstash:${VERSION}
 ```
 
 Your local pipeline configuration should be stored in the `~/pipeline` folder.
