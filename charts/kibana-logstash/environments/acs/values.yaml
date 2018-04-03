@@ -1,0 +1,115 @@
+image:
+  pullPolicy: Always
+
+kibana:
+  image:
+    repository: docker.elastic.co/kibana/kibana 
+    tag       : 6.2.3
+  replicas: 3
+  env_var:
+    ELASTICSEARCH_URL: "http://elasticsearch:9200"
+    KIBANA_ES_URL: "http://elasticsearch:9200"
+    XPACK_SECURITY_ENABLED: false
+    KUBERNETES_TRUST_CERT: false
+  container:
+    request:
+      cpu: "2000m"
+      mem: "1Gi"
+    limit:
+      cpu: "2000m"
+      mem: "2Gi"
+  ingress:
+    host: 
+    public:
+      cert:
+    private:
+      key:
+
+logstash:
+  image:
+    repository: mseoss/logstash
+    tag       : 6.2.3
+  replicas: 3
+  queue:
+    storageclass: logstash-managedfast
+    disk_capacity: "50Gi"
+  env_var:
+    ELASTICSEARCH_URL: "http://elasticsearch:9200"
+    KUBERNETES_TRUST_CERT: false
+  container:
+    request:
+      cpu: "1000m"
+      mem: "1Gi"
+    limit:
+      cpu: "1000m"
+      mem: "2Gi"
+
+stunnel:
+  image:
+    repository: mseoss/stunnel
+    tag       : 5.44
+  connections:
+    prod:
+      redis:
+        host: prod-logscache.redis.cache.windows.net
+        port: 6380
+        key:
+      local:
+        host: "127.0.0.1"
+        port: 6379
+  timeout: 30
+  container:
+    request:
+      cpu: "500m"
+      mem: "512Mi"
+    limit:
+      cpu: "500m"
+      mem: "2Gi"
+
+oauth:
+  image:
+    repository: mseoss/oauth2_proxy
+    tag       : v2.2
+  cookie:
+    expire : "168h0m"
+    refresh: "60m"
+    secret :
+  client:
+    id:
+    secret:
+  container:
+    request:
+      cpu: "500m"
+      mem: "512Mi"
+    limit:
+      cpu: "500m"
+      mem: "2Gi"
+
+curator:
+  image:
+    repository: docker.io/bobrik/curator
+    tag       : latest
+  container:
+    request:
+      cpu: "500m"
+      mem: "512Mi"
+    limit:
+      cpu: "500m"
+      mem: "2Gi"
+  index_prefix: prod
+
+templates:
+  image:
+    repository: mseoss/elastictemplate
+    tag: latest
+    pullPolicy: Always
+
+watcher:
+  image:
+    repository: mseoss/elasticwatcher
+    tag: latest
+    pullSecret: msedocker-registry
+    pullPolicy: Always
+  webhooks:
+    teams: 
+  indices: "\"prod-logstash-*\""

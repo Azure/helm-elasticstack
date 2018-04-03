@@ -1,0 +1,93 @@
+{{ $topscope := . }}
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: kibana
+  namespace: {{ .Release.Namespace }}
+  labels:
+    component: elk
+    role: kibana
+spec:
+  replicas: {{ $topscope.Values.kibana.replicas | default 3 }}
+  selector:
+    matchLabels:
+      component: elk
+      role: kibana
+  template:
+    metadata:
+      labels:
+        component: elk
+        role: kibana
+      annotations:
+        checksum/kibana-secret: {{ include (print $.Template.BasePath "/secrets/kibana-tls-secret.yaml") . | sha256sum }}
+        checksum/oauth2-config: {{ include (print $.Template.BasePath "/config/oauth2_proxy_emails.yaml") . | sha256sum }}
+        checksum/oauth2-secret: {{ include (print $.Template.BasePath "/secrets/oauth2-proxy-config-secret.yaml") . | sha256sum }}
+    spec:
+      serviceAccount: elk
+      containers:
+      - name: oauth2-proxy
+        image: {{ $topscope.Values.oauth.image.repository }}:{{ $topscope.Values.oauth.image.tag }}
+        imagePullPolicy: {{ $topscope.Values.image.pullPolicy }}
+        args:
+        - "--config=/config/oauth2_proxy.cfg"
+        ports:
+        - containerPort: 4180
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - name: oauth2-proxy-secret
+          mountPath: /config
+        - name: oauth2-proxy-emails-config
+          mountPath: /authorization
+        resources:
+          limits:
+            memory: {{ .Values.oauth.container.limit.mem | quote }}
+            cpu: {{ .Values.oauth.container.limit.cpu | quote }}
+          requests:
+            memory: {{ .Values.oauth.container.request.mem | quote }}
+            cpu: {{ .Values.oauth.container.request.cpu | quote }}
+      - name: kibana
+        image: {{ $topscope.Values.kibana.image.repository }}:{{ $topscope.Values.kibana.image.tag }}
+        imagePullPolicy: {{ $topscope.Values.image.pullPolicy }}
+        env:
+{{- range $key, $val := $topscope.Values.kibana.env_var }}
+        - name: {{ $key | quote }}
+          value: {{ $val | quote }}
+{{- end }}
+        ports:
+        - containerPort: 5601
+          name: http
+          protocol: TCP
+        resources:
+          limits:
+            memory: {{ .Values.kibana.container.limit.mem | quote }}
+            cpu: {{ .Values.kibana.container.limit.cpu | quote }}
+          requests:
+            memory: {{ .Values.kibana.container.request.mem | quote }}
+            cpu: {{ .Values.kibana.container.request.cpu | quote }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5601
+          initialDelaySeconds: 180
+          timeoutSeconds: 30
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5601
+          initialDelaySeconds: 600
+          timeoutSeconds: 30
+          periodSeconds: 30
+      volumes:
+        - name: oauth2-proxy-secret
+          secret:
+            secretName: oauth2-proxy-secret
+        - name: oauth2-proxy-emails-config
+          configMap:
+            name: oauth2-proxy-emails-configmap
+{{- if $topscope.Values.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ $topscope.Values.image.pullSecret }}
+{{- end }}

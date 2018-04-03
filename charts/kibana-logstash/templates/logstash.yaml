@@ -1,0 +1,115 @@
+{{ $topscope := . }}
+---
+apiVersion: apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: logstash
+  namespace: {{ .Release.Namespace }}
+  labels:
+    component: elk
+    role: logstash
+spec:
+  serviceName: logstash
+  replicas: {{ $topscope.Values.logstash.replicas | default 3 }}
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      component: elk
+      role: logstash
+  template:
+    metadata:
+      labels:
+        component: elk
+        role: logstash
+      annotations:
+        checksum/logstash-secret: {{ include (print $.Template.BasePath "/secrets/logstash-pipeline-secret.yaml") . | sha256sum }}
+        checksum/logstash-config: {{ include (print $.Template.BasePath "/config/logstash.yaml") . | sha256sum }}
+        checksum/logstash-patterns-config: {{ include (print $.Template.BasePath "/config/logstash-patterns.yaml") . | sha256sum }}
+        checksum/stunnel-config: {{ include (print $.Template.BasePath "/config/stunnel.yaml") . | sha256sum }}
+    spec:
+      serviceAccount: elk
+      serviceAccountName: elk
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+{{- range $environment, $connection := .Values.stunnel.connections }}
+      - name: stunnel-{{ $environment }}
+        image: {{ $topscope.Values.stunnel.image.repository }}:{{ $topscope.Values.stunnel.image.tag }}
+        imagePullPolicy: {{ $topscope.Values.image.pullPolicy }}
+        env:
+        ports:
+        - containerPort: {{ $connection.local.port }}
+          name: redis-{{ $environment }}
+          protocol: TCP
+        volumeMounts:
+        - name: stunnel-config-{{ $environment }}
+          mountPath: /config
+        resources:
+          limits:
+            memory: {{ $topscope.Values.stunnel.container.limit.mem | quote }}
+            cpu: {{ $topscope.Values.stunnel.container.limit.cpu | quote }}
+          requests:
+            memory: {{ $topscope.Values.stunnel.container.request.mem | quote }}
+            cpu: {{ $topscope.Values.stunnel.container.request.cpu | quote }}
+{{- end }}
+      - name: logstash
+        image: {{ $topscope.Values.logstash.image.repository }}:{{ $topscope.Values.logstash.image.tag }}
+        imagePullPolicy: {{ $topscope.Values.image.pullPolicy }}
+        env:
+{{- range $key, $val := $topscope.Values.logstash.env_var }}
+        - name: {{ $key | quote }}
+          value: {{ $val | quote }}
+{{- end }}
+        volumeMounts:
+        - name: logstash-config
+          mountPath: /usr/share/logstash/config/logstash.yml
+          subPath: logstash.yml
+        - name: logstash-pipeline-secret
+          mountPath: /usr/share/logstash/pipeline/logstash.conf
+          subPath: logstash.conf
+        - name: logstash-patterns-config
+          mountPath: /usr/share/logstash/pipeline/patterns
+          subPath: patterns
+        - name: storage
+          mountPath: /data
+        ports:
+        - containerPort: 9600
+          name: logstashapi
+          protocol: TCP
+        resources:
+          limits:
+            memory: {{ .Values.logstash.container.limit.mem | quote }}
+            cpu: {{ .Values.logstash.container.limit.cpu | quote }}
+          requests:
+            memory: {{ .Values.logstash.container.request.mem | quote }}
+            cpu: {{ .Values.logstash.container.request.cpu | quote }}
+      volumes:
+{{- range $environment, $connection := .Values.stunnel.connections }}
+        - name: stunnel-config-{{ $environment }}
+          configMap:
+            name: stunnel-configmap-{{ $environment }}
+{{- end }}
+        - name: logstash-config
+          configMap:
+            name: logstash-configmap
+        - name: logstash-patterns-config
+          configMap:
+            name: logstash-patterns-configmap
+        - name: logstash-pipeline-secret
+          secret:
+            secretName: logstash-pipeline-secret
+{{- if $topscope.Values.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ $topscope.Values.image.pullSecret }}
+{{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      storageClassName: {{ $topscope.Values.logstash.queue.storageclass | default "standard" | quote }}
+      accessModes: [ ReadWriteOnce ]
+      resources:
+        requests:
+          storage: {{ $topscope.Values.logstash.queue.disk_capacity | default "50Gi" | quote }}

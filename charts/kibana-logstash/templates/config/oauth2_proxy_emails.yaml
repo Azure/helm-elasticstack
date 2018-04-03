@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oauth2-proxy-emails-configmap
+  namespace: {{ .Release.Namespace }}
+data:
+  oauth2_emails.cfg: |
+    email@example.com

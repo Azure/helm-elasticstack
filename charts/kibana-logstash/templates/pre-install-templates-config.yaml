@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: templates-configmap
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    config/checksum: {{ print .Values.templates | sha256sum }}
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": hook-succeeded
+data:
+  templates.json: |
+    {
+        "templates": [
+            {
+                "name": "logstash_template",
+                "body": {
+                    "order": 0,
+                    "template": "*-logstash-*",
+                    "settings": {},
+                    "mappings": {
+                        "_default_": {
+                            "dynamic": "strict"
+                        },
+                        "logstash-input": {
+                            "dynamic": "strict",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "index": "not_analyzed"
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "index": "not_analyzed"
+                                },
+                                "stack_trace": {
+                                    "type": "string"
+                                },
+                                "level": {
+                                    "type": "string",
+                                    "index": "not_analyzed"
+                                },
+                                "hostname": {
+                                    "type": "string",
+                                    "index": "not_analyzed"
+                                },
+                                "@timestamp": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date",
+                                    "index": "not_analyzed",
+                                    "doc_values": "true"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "duration": {
+                                    "type": "long"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "index": "not_analyzed",
+                                    "doc_values": "true"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "index": "not_analyzed",
+                                    "doc_values": "true"
+                                },
+                                "exception-message": {
+                                    "type": "string",
+                                    "doc_values": "true",
+                                    "index": "not_analyzed"
+                                },
+                                "stacktrace": {
+                                    "type": "string",
+                                    "doc_values": "true",
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }

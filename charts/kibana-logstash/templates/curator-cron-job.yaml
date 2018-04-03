@@ -1,0 +1,55 @@
+{{ $topscope := . }}
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: curator-cron-job
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: "@daily"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            component: elk
+            role: curator
+          annotations:
+            checksum/curator-config: {{ include (print $.Template.BasePath "/config/curator-config.yaml") . | sha256sum }}
+            checksum/curator-actions: {{ include (print $.Template.BasePath "/config/curator-actions.yaml") . | sha256sum }}
+        spec:
+          serviceAccount: elk
+          containers:
+          - name: curator
+            image: {{ .Values.curator.image.repository }}:{{ .Values.curator.image.tag | default "latest" }}
+            imagePullPolicy: {{ .Values.curator.image.pullPolicy }}
+            command: ["/usr/bin/curator"]
+            args:
+            - "--config=/curator/curator.yml"
+            - "/curator/actions.yml"
+            volumeMounts:
+              - name: curator-config
+                mountPath: /curator/curator.yml
+                subPath: curator.yml
+              - name: curator-actions
+                mountPath: /curator/actions.yml
+                subPath: actions.yml
+            resources:
+              limits:
+                memory: {{ .Values.curator.container.limit.mem | quote }}
+                cpu: {{ .Values.curator.container.limit.cpu | quote }}
+              requests:
+                memory: {{ .Values.curator.container.request.mem | quote }}
+                cpu: {{ .Values.curator.container.request.cpu | quote }}
+          restartPolicy: OnFailure
+          volumes:
+            - name: curator-actions
+              configMap:
+                name: curator-actions-configmap
+            - name: curator-config
+              configMap:
+                name: curator-config-configmap
+{{- if $topscope.Values.image.pullSecret }}
+          imagePullSecrets:
+            - name: {{ $topscope.Values.image.pullSecret }}
+{{- end }}

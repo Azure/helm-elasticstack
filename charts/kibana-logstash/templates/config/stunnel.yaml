@@ -1,0 +1,27 @@
+{{ $topscope := . }}
+{{- range $environment, $connection := .Values.stunnel.connections }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stunnel-configmap-{{ $environment }}
+  namespace: {{ $topscope.Release.Namespace }}
+data:
+  stunnel.conf: |
+    setuid = root
+    setgid = root
+
+    foreground = yes
+    debug = 5
+
+    options = NO_SSLv2
+    options = NO_SSLv3
+
+    OCSPaia = yes
+
+    [redis]
+      accept={{ $connection.local.host }}:{{ $connection.local.port }}
+      connect={{ $connection.redis.host }}:{{ $connection.redis.port }}
+      client=yes
+    TIMEOUTidle={{ $topscope.Values.stunnel.timeout }}
+{{- end }}
