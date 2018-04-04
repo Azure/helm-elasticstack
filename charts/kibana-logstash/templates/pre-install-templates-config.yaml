@@ -27,55 +27,49 @@ data:
                             "dynamic": "strict",
                             "properties": {
                                 "type": {
-                                    "type" "keyword",
+                                    "type": "keyword",
                                     "index": true
                                 },
                                 "username": {
-                                    "type" "keyword",
+                                    "type": "keyword",
                                     "index": true
                                 },
                                 "stack_trace": {
-                                    "type" "text",
+                                    "type": "text",
                                     "index": true
                                 },
                                 "level": {
-                                    "type" "keyword",
+                                    "type": "keyword",
                                     "index": true
                                 },
                                 "hostname": {
-                                    "type" "keyword",
+                                    "type": "keyword",
                                     "index": true
                                 },
-                                "@timestamp": {
-                                    "format": "dateOptionalTime",
-                                    "type": "date",
-                                    "index": "not_analyzed",
-                                    "doc_values": "true"
-                                },
                                 "message": {
-                                    "type" "text",
+                                    "type": "text",
                                     "index": true
                                 },
                                 "duration": {
                                     "type": "long"
                                 },
                                 "description": {
-                                    "type" "keyword",
+                                    "type": "keyword",
                                     "index": true,
                                     "doc_values": "true"
                                 },
                                 "name": {
-                                    "type" "keyword",
+                                    "type": "keyword",
                                     "index": true,
                                     "doc_values": "true"
                                 },
                                 "exception-message": {
-                                    "type" "keyword",
+                                    "type": "keyword",
                                     "index": true,
                                     "doc_values": "true"
                                 },
                                 "stacktrace": {
-                                    "type" "keyword",
+                                    "type": "keyword",
                                     "index": true,
                                     "doc_values": "true"
                                 }
