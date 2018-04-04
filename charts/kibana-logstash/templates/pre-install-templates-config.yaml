@@ -27,23 +27,24 @@ data:
                             "dynamic": "strict",
                             "properties": {
                                 "type": {
-                                    "type": "string",
-                                    "index": "not_analyzed"
+                                    "type" "keyword",
+                                    "index": true
                                 },
                                 "username": {
-                                    "type": "string",
-                                    "index": "not_analyzed"
+                                    "type" "keyword",
+                                    "index": true
                                 },
                                 "stack_trace": {
-                                    "type": "string"
+                                    "type" "text",
+                                    "index": true
                                 },
                                 "level": {
-                                    "type": "string",
-                                    "index": "not_analyzed"
+                                    "type" "keyword",
+                                    "index": true
                                 },
                                 "hostname": {
-                                    "type": "string",
-                                    "index": "not_analyzed"
+                                    "type" "keyword",
+                                    "index": true
                                 },
                                 "@timestamp": {
                                     "format": "dateOptionalTime",
@@ -52,30 +53,31 @@ data:
                                     "doc_values": "true"
                                 },
                                 "message": {
-                                    "type": "string"
+                                    "type" "text",
+                                    "index": true
                                 },
                                 "duration": {
                                     "type": "long"
                                 },
                                 "description": {
-                                    "type": "string",
-                                    "index": "not_analyzed",
+                                    "type" "keyword",
+                                    "index": true,
                                     "doc_values": "true"
                                 },
                                 "name": {
-                                    "type": "string",
-                                    "index": "not_analyzed",
+                                    "type" "keyword",
+                                    "index": true,
                                     "doc_values": "true"
                                 },
                                 "exception-message": {
-                                    "type": "string",
-                                    "doc_values": "true",
-                                    "index": "not_analyzed"
+                                    "type" "keyword",
+                                    "index": true,
+                                    "doc_values": "true"
                                 },
                                 "stacktrace": {
-                                    "type": "string",
-                                    "doc_values": "true",
-                                    "index": "not_analyzed"
+                                    "type" "keyword",
+                                    "index": true,
+                                    "doc_values": "true"
                                 }
                             }
                         }
