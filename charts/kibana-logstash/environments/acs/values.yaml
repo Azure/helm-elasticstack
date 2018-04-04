@@ -99,6 +99,7 @@ curator:
   index_prefix: prod
 
 templates:
+  install: false
   image:
     repository: mseoss/elastictemplate
     tag: latest

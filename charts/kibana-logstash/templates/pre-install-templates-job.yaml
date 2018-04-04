@@ -1,3 +1,4 @@
+{{- if .Values.templates.install -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -34,3 +35,4 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.templates.image.pullSecret }}
 {{- end }}
+{{- end -}}
