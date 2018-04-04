@@ -31,7 +31,7 @@ logstash:
     tag       : 6.2.3
   replicas: 3
   queue:
-    storageclass: logstash-managedfast
+    storageclass: default
     disk_capacity: "50Gi"
   env_var:
     ELASTICSEARCH_URL: "http://elasticsearch:9200"
