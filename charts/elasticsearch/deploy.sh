@@ -1,8 +1,8 @@
+#!/bin/bash
 # Copyright (c) Microsoft and contributors.  All rights reserved.
 #
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
-#!/bin/bash
 
 # Include some common functions
 current_dir="$(dirname $0)"
@@ -107,8 +107,8 @@ fi
 
 if [[ "$DRY_RUN" = true ]]
 then
-    echo " OK"
+    echo " Done"
     cat $output
 else
-    echo " OK"
+    echo " Done"
 fi
