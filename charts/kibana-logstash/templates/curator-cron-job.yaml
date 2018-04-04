@@ -1,5 +1,4 @@
-{{ $topscope := . }}
----
+{{- if .Values.curator.install -}}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -22,7 +21,7 @@ spec:
           containers:
           - name: curator
             image: {{ .Values.curator.image.repository }}:{{ .Values.curator.image.tag | default "latest" }}
-            imagePullPolicy: {{ .Values.curator.image.pullPolicy }}
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
             command: ["/usr/bin/curator"]
             args:
             - "--config=/curator/curator.yml"
@@ -49,7 +48,8 @@ spec:
             - name: curator-config
               configMap:
                 name: curator-config-configmap
-{{- if $topscope.Values.image.pullSecret }}
+{{- if .Values.image.pullSecret }}
           imagePullSecrets:
-            - name: {{ $topscope.Values.image.pullSecret }}
+            - name: {{ .Values.image.pullSecret }}
 {{- end }}
+{{- end -}}

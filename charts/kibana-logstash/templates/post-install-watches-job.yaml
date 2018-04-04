@@ -18,7 +18,7 @@ spec:
       containers:
       - name: elasticwatcher
         image: {{ .Values.watcher.image.repository }}:{{ .Values.watcher.image.tag | default "latest" }}
-        imagePullPolicy: {{ .Values.watcher.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         command: ["/go/bin/elasticwatcher"]
         args:
         - "create"
@@ -32,8 +32,8 @@ spec:
         - name: watches-secret
           secret:
             secretName: watches-secret
-{{- if .Values.watcher.image.pullSecret }}
+{{- if .Values.image.pullSecret }}
       imagePullSecrets:
-        - name: {{ .Values.watcher.image.pullSecret }}
+        - name: {{ .Values.image.pullSecret }}
 {{- end }}
 {{- end -}}

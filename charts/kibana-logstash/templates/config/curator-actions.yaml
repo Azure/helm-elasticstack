@@ -1,3 +1,4 @@
+{{- if .Values.curator.install -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -29,3 +30,4 @@ data:
           unit: days
           unit_count: 30 
           exclude:
+{{- end -}}

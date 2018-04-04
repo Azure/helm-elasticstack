@@ -86,6 +86,7 @@ oauth:
       mem: "2Gi"
 
 curator:
+  install: true
   image:
     repository: docker.io/bobrik/curator
     tag       : latest
@@ -99,19 +100,16 @@ curator:
   index_prefix: prod
 
 templates:
-  install: false
+  install: true
   image:
     repository: mseoss/elastictemplate
     tag: latest
-    pullPolicy: Always
 
 watcher:
-  install: false
+  install: true
   image:
     repository: mseoss/elasticwatcher
     tag: latest
-    pullSecret: msedocker-registry
-    pullPolicy: Always
   webhooks:
     teams: 
   indices: "\"prod-logstash-*\""
