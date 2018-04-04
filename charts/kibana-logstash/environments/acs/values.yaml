@@ -49,9 +49,9 @@ stunnel:
     repository: mseoss/stunnel
     tag       : 5.44
   connections:
-    prod:
+    dev:
       redis:
-        host: prod-logscache.redis.cache.windows.net
+        host: dev-logscache.redis.cache.windows.net
         port: 6380
         key:
       local:
@@ -97,7 +97,7 @@ curator:
     limit:
       cpu: "500m"
       mem: "2Gi"
-  index_prefix: prod
+  index_prefix: dev
 
 templates:
   install: true
@@ -112,4 +112,4 @@ watcher:
     tag: latest
   webhooks:
     teams: 
-  indices: "\"prod-logstash-*\""
+  indices: "\"dev-logstash-*\""

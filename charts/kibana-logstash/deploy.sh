@@ -19,8 +19,8 @@ function get_environment_params() {
     case $environment in
         'acs')
             for env in "${!redis_key_secrets_acs[@]}"; do
-                logstash_redis_key=$(get_secret ${redis_key_secrets_acs[$env]})
-                check_return_code "Failed to fetch from KeyVault the Redis Key for '$env' environment"
+                logstash_redis_key=$(get_secret $KEYVAULT_NAME ${redis_key_secrets_acs[$env]})
+                check_rc "Failed to fetch from KeyVault the Redis Key for '$env' environment"
                 params+=" --set stunnel.connections.$env.redis.key=${logstash_redis_key}"
             done
             ;;
@@ -136,27 +136,27 @@ then
 
     # Fetch form KeyVault the Kibana certificate and private key
     echo "  Fetching Kibana certificate and private key"
-    kibana_cert_key_password=$(get_secret $KIBANA_CERTIFICATE_KEY_PASSWORD_SECRET)
+    kibana_cert_key_password=$(get_secret $KEYVAULT_NAME $KIBANA_CERTIFICATE_KEY_PASSWORD_SECRET)
     check_rc "Failed to fetch from KeyVault the password for Kibana certificate key"
-    get_cert_and_key public_cert private_key $KIBANA_CERTIFICATE_SECRET $kibana_cert_key_password
+    get_cert_and_key $KEYVAULT_NAME $KIBANA_CERTIFICATE_SECRET $DOMAIN $kibana_cert_key_password public_cert private_key
     helm_params+=" --set kibana.ingress.public.cert=${public_cert}"
     helm_params+=" --set kibana.ingress.private.key=${private_key}"
 
     # Fetch from KeyVault the OAuth2 proxy secrets
     echo "  Fetching OAuth2 proxy secrets"
-    kibana_oauth_client_id=$(get_secret $KIBANA_OAUTH_CLIENT_ID)
+    kibana_oauth_client_id=$(get_secret $KEYVAULT_NAME $KIBANA_OAUTH_CLIENT_ID)
     check_rc "Failed to fetch from KeyVault the Kibana OAuth2 Client ID"
     helm_params+=" --set oauth.client.id=${kibana_oauth_client_id}"
-    kibana_oauth_client_secret=$(get_secret $KIBANA_OAUTH_CLIENT_SECRET)
+    kibana_oauth_client_secret=$(get_secret $KEYVAULT_NAME $KIBANA_OAUTH_CLIENT_SECRET)
     check_rc "Failed to fetch from KeyVault the Kibana OAuth2 Client Secret"
     helm_params+=" --set oauth.client.secret=${kibana_oauth_client_secret}"
-    kibana_oauth_cookie_secret=$(get_secret $KIBANA_OAUTH_COOKIE_SECRET)
+    kibana_oauth_cookie_secret=$(get_secret $KEYVAULT_NAME $KIBANA_OAUTH_COOKIE_SECRET)
     check_rc "Failed to fetch from KeyVault the Kibana OAuth2 Cookie Secret"
     helm_params+=" --set oauth.cookie.secret=${kibana_oauth_cookie_secret}"
 
     # Fetch from KeyVault the Watcher secrets
     echo "  Fetching Elasticsearch Watcher secrets"
-    elasticsearch_watcher_webhook_teams=$(get_secret $ELASTICSEARCH_WATCHER_WEBHOOK_TEAMS)
+    elasticsearch_watcher_webhook_teams=$(get_secret $KEYVAULT_NAME $ELASTICSEARCH_WATCHER_WEBHOOK_TEAMS)
     check_rc "Failed to fetch from KeyVault the Elasticsearch Watcher webhook teams"
     helm_params+=" --set watcher.webhooks.teams=${elasticsearch_watcher_webhook_teams}"
 
