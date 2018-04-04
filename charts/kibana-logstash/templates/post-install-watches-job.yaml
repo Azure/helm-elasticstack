@@ -1,3 +1,4 @@
+{{- if .Values.watcher.install -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -35,3 +36,4 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.watcher.image.pullSecret }}
 {{- end }}
+{{- end -}}
