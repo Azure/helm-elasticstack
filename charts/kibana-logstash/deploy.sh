@@ -172,7 +172,7 @@ output=$(mktemp)
 (
     if [[ "$DRY_RUN" = true ]]
     then
-        helm template $helm_values $helm_params .
+        helm template --namespace $NAMESPACE $helm_values $helm_params .
     else
         helm upgrade -i --timeout 1800 --namespace $NAMESPACE $helm_values $helm_params $CHART_NAME . --wait &> $output
     fi
