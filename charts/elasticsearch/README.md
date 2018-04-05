@@ -38,7 +38,7 @@ The chart can be installed with the `deploy.sh` script. An environment and names
 ```
 
 Alternatively you can also installed automatically the [Elasticsearch x-pack license](https://license.elastic.co/download) after the deployment. First you need to activate the 
-license installation in [Helm values](environments/acs/values.yaml) for by setting the `license.install=true` and you may also want to enable the `x-pack features` in [Elasticsearch config](/templates/config.config.yaml).
+license installation in [Helm values](environments/acs/values.yaml) by setting the `license.install=true` and you may also want to enable the `x-pack features` in [Elasticsearch config](/templates/config.config.yaml).
 
 ```console
 ./deploy.sh -e acs -n elk -l license.json
