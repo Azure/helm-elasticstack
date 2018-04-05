@@ -61,7 +61,7 @@ This command removes all the Kubernetes resources associated with the chart and 
 
 You can validate that the chart has not lint warnings during development.
 
-```bash
+```console
 helm lint -f environments/acs/values.yaml
 ```
 
@@ -69,7 +69,7 @@ helm lint -f environments/acs/values.yaml
 
 You can validate if the chart is properly rendered using the `helm template` command. A `dry run mode` is built into the deployment script. You just need to execute the script with the `-t` option:
 
-```bash
+```console
 
 ./deploy.sh -t -n elk
 ```
