@@ -1,10 +1,10 @@
 # Introduction
 
-These [Helm](https://github.com/kubernetes/helm) Charts bootstrap a production ready [Elastic Stack](https://www.elastic.co/products) service on a Kubernetes cluster managed by [Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes) and other Azure services.
+These [Helm](https://github.com/kubernetes/helm) charts bootstrap a production ready [Elastic Stack](https://www.elastic.co/products) service on a Kubernetes cluster managed by [Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes) and other Azure services.
 
 The following features are included:
 * Deployment for [Elatsicsearch](https://www.elastic.co/products/elasticsearch), [Kibana](https://www.elastic.co/products/kibana) and [Logstash](https://www.elastic.co/products/logstash) services
-* Deployment script which retrieves the secrets and certificates from [Azure Key Vault](https://azure.microsoft.com/en-us/services/key-vault/) and injects them into the Helm Charts
+* Deployment script which retrieves the secrets and certificates from [Azure Key Vault](https://azure.microsoft.com/en-us/services/key-vault/) and injects them into the Helm charts
 * TLS termination and load balancing for Kibana using [NGINX Ingress Controller](https://github.com/kubernetes/ingress-nginx)
 * [Azure Active Directory](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-authentication-scenarios) authentication for Kibana
 * Integration with [Azure Redis Cache](https://azure.microsoft.com/en-us/services/cache/) which acts as middleware for log events between the Log Appenders and Logstash
@@ -21,7 +21,7 @@ The following features are included:
 
 # Azure Resources
 
-A few Azure resources need to be provisioned before proceeding with the Helm Charts installation.
+A few Azure resources need to be provisioned before proceeding with the Helm charts installation.
 
 ## Azure Key Vault
 
@@ -36,7 +36,7 @@ az keyvault create --name <KEYVAULT_NAME> --resource-group <RESOURCE_GROUP>
 
 It is recommended that you use two different principals to operate the Key Vault:
 * A _Security Operator_ who has read/write access to secrets, keys and certificates. This principal should be only used for setting up the Key Vault or rotate the secrets.
-* A _Deployment Operator_ who is only able to read secrets. This principal you must use to perform the deployment.
+* A _Deployment Operator_ who is only able to read secrets. This principal should be used to perform the deployment.
 
 You can configure the access policies for these principals as follows:
 
@@ -186,9 +186,7 @@ In case you have an [Elasticsearch x-pack license](https://license.elastic.co/do
 
 ## NGINX Ingress Controller
 
-The `nginx-ingress` will act as a frontend load balancer and it will provide TLS termination for Kibana public endpoint. You can get the latest version from [kubernetes/charts/stable/nginx-ingress](https://github.com/kubernetes/charts/tree/master/stable/nginx-ingress). 
-
-Before starting the installation, you have to update a few Helm values from `values.yaml` file.
+The `nginx-ingress` will act as a frontend load balancer and it will provide TLS termination for Kibana public endpoint. You can get the latest version from [kubernetes/charts/stable/nginx-ingress](https://github.com/kubernetes/charts/tree/master/stable/nginx-ingress). Before starting the installation, you have to update a few Helm values from `values.yaml` file.
 
 You should enable the Kubernetes RBAC by setting:
 
@@ -220,7 +218,7 @@ nginx-ingress-nginx-ingress-controller   LoadBalancer   10.0.26.141   <YOUR-PUBL
 
 ## Elaticsearch Cluster
 
-Kibana requires an Elasticsearch cluster which can be installed using the [elasticsearch chart](charts/elasticsearch/README.md). You can create a deployment using the `deploy.sh` script available in the repository. Check the [README](charts/elasticsearch/README.md) file for more details: 
+Kibana requires an Elasticsearch cluster which can be installed using the [elasticsearch chart](charts/elasticsearch/README.md). You can create a deployment using the `deploy.sh` script available in the chart. Check the [README](charts/elasticsearch/README.md) file for more details: 
 
 ```console
 ./deploy.sh -e acs -n elk
@@ -230,7 +228,7 @@ The command will install an Elasticsearch cluster in the `elk` namespace using t
 
 ## Kibana and Logstash
 
-You can now install the [kibana-logstash](charts/kibana-logstash) chart. Check the [README](charts/kibana-logstash/README.md) file for more details.
+You can install now the [kibana-logstash](charts/kibana-logstash) chart using the `deploy.sh` script available in the chart. Check the [README](charts/kibana-logstash/README.md) file for more details.
 
 ```console
 ./deploy.sh -n elk -d <DOMAIN> -v <KEYVAULT_NAME>
@@ -238,7 +236,7 @@ You can now install the [kibana-logstash](charts/kibana-logstash) chart. Check t
 ```
 > Note that you have to replace the `DOMAIN` with your Kibana DNS domain and the `KEYVAULT_NAME` with your Azure Key Vault name. 
 
-This command will install Kibana and Logstash in the `elk` namespace using the `acs` environment variables. If everything works fine, you should see the following output:
+This command will install Kibana and Logstash in the `elk` namespace using the `acs` environment variables. If everything works well, you should see the following output:
 
 ```console
 Checking az command
