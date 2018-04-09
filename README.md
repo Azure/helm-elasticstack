@@ -6,7 +6,7 @@
 These [Helm](https://github.com/kubernetes/helm) charts bootstrap a production ready [Elastic Stack](https://www.elastic.co/products) service on a Kubernetes cluster managed by [Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes) and other Azure services.
 
 The following features are included:
-* Deployment for [Elatsicsearch](https://www.elastic.co/products/elasticsearch), [Kibana](https://www.elastic.co/products/kibana) and [Logstash](https://www.elastic.co/products/logstash) services
+* Deployment for [Elasticsearch](https://www.elastic.co/products/elasticsearch), [Kibana](https://www.elastic.co/products/kibana) and [Logstash](https://www.elastic.co/products/logstash) services
 * Deployment script which retrieves the secrets and certificates from [Azure Key Vault](https://azure.microsoft.com/en-us/services/key-vault/) and injects them into the Helm charts
 * TLS termination and load balancing for Kibana using [NGINX Ingress Controller](https://github.com/kubernetes/ingress-nginx)
 * [Azure Active Directory](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-authentication-scenarios) authentication for Kibana
