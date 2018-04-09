@@ -17,3 +17,26 @@ matrix:
         - cd tools/elasticlicense && make test && cd ../../
         - cd tools/elastictemplate && make test && cd ../../
         - cd tools/elasticwatcher && make test && cd ../../
+
+    - language: generic
+      env:
+        global:
+          - KUBECTL_VERSION="v1.9.6"
+          - HELM_VERSION="v2.8.2"
+      install:
+        - wget https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl -O /tmp/kubectl
+        - chmod +x /tmp/kubectl
+        - wget http://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz -O /tmp/helm.tar.gz
+        - tar xzf /tmp/helm.tar.gz -C /tmp --strip-components=1
+        - chmod +x /tmp/helm
+        - export PATH=$PATH:/tmp
+      before_script:
+        - helm init --client-only
+        - helm repo add stable https://kubernetes-charts.storage.googleapis.com
+        - |
+          for chart in $(find . -name 'requirements.yaml'); do
+            helm dep build $(dirname ${chart})
+          done
+      script:
+      - helm lint charts/elasticsearch
+      - helm lint charts/kibana-logstash
