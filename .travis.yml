@@ -1,0 +1,17 @@
+matrix:
+  include:
+    - language: go
+      go:
+        - 1.7
+        - 1.8
+        - 1.9
+        - tip
+      install:
+        - go get -u github.com/golang/lint/golint
+        - go get github.com/GoASTScanner/gas/cmd/gas/...
+        - go get -u github.com/Masterminds/glide
+        - export PATH=$PATH:$HOME/gopath/bin
+      script:
+        - cd tools/elasticlicense && make test && cd ../../
+        - cd tools/elastictemplate && make test && cd ../../
+        - cd tools/elastiwatcher && make test && cd ../../
