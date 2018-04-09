@@ -16,4 +16,4 @@ matrix:
       script:
         - cd tools/elasticlicense && make test && cd ../../
         - cd tools/elastictemplate && make test && cd ../../
-        - cd tools/elastiwatcher && make test && cd ../../
+        - cd tools/elasticwatcher && make test && cd ../../
