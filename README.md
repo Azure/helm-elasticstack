@@ -1,5 +1,8 @@
 # Introduction
 
+[![Build Status](https://travis-ci.org/Azure/helm-elasticstack.svg?branch=master)](https://travis-ci.org/Azure/helm-elasticstack)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Azure/helm-elasticstack)](https://goreportcard.com/report/github.com/Azure/helm-elasticstack)
+
 These [Helm](https://github.com/kubernetes/helm) charts bootstrap a production ready [Elastic Stack](https://www.elastic.co/products) service on a Kubernetes cluster managed by [Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes) and other Azure services.
 
 The following features are included:
