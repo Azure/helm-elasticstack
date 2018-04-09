@@ -55,7 +55,7 @@ func buildHTTPClient() *http.Client {
 }
 
 func loadBasicAuth(authFile string) (*BasicAuth, error) {
-	file, err := ioutil.ReadFile(authFile)
+	file, err := ioutil.ReadFile(authFile) // #nosec
 	if err != nil {
 		return nil, fmt.Errorf(`Failed to read the basic authentication
 		credentials from the file: %v`, err)
