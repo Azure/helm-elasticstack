@@ -81,7 +81,7 @@ func setBasicAuth(req *http.Request, authFile string) error {
 }
 
 func loadWatches(watchesFile string) (*WatcherConfig, error) {
-	file, err := ioutil.ReadFile(watchesFile)
+	file, err := ioutil.ReadFile(watchesFile) // #nosec
 	if err != nil {
 		return nil, fmt.Errorf("Failed to read the watches from file: %v", err)
 	}

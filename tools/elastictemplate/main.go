@@ -76,7 +76,7 @@ func setBasicAuth(req *http.Request, authFile string) error {
 }
 
 func loadTemplates(templatesFile string) (*TemplatesConfig, error) {
-	file, err := ioutil.ReadFile(templatesFile)
+	file, err := ioutil.ReadFile(templatesFile) // #nosec
 	if err != nil {
 		return nil, fmt.Errorf("Failed to read the templates from file: %v", err)
 	}
