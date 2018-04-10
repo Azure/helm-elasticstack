@@ -5,4 +5,4 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   oauth2_emails.cfg: |
-    email@example.com
+{{ .Files.Get "config/oauth2_emails.cfg" | indent 4 }}

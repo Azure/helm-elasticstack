@@ -5,4 +5,4 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   patterns: |
-    MSID [$a-zA-Z0-9._-]+
+{{ .Files.Get "config/logstash-patterns.cfg" | indent 4 }}

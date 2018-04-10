@@ -5,20 +5,4 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   logstash.yml: |
-      pipeline:
-        workers: 20
-        batch:
-          size: 125
-          delay: 5
-      path:
-        queue: "/data/queue"
-
-      path.config: "/usr/share/logstash/pipeline/logstash.conf"
-
-      xpack:
-        monitoring:
-          elasticsearch:
-            url:
-              - "http://elasticsearch:9200"
-            username: ""
-            password: ""
+{{ .Files.Get "config/logstash.yml" | indent 4 }}

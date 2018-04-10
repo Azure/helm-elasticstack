@@ -11,5 +11,5 @@ metadata:
     "helm.sh/hook-delete-policy": hook-succeeded
 data:
   templates.json: |
-{{ include (print .Template.BasePath "/tpl/_templates.json.tpl") . | indent 4 }}
+{{ .Files.Get "config/templates.json" | indent 4 }}
 {{- end -}}

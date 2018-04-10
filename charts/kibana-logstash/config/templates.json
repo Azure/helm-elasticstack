@@ -5,7 +5,9 @@
       "body": {
         "order": 0,
         "template": "*-logstash-*",
-        "settings": null,
+        "settings": {
+            "number_of_shards" : 1
+        },
         "mappings": {
           "_default_": {
             "dynamic": "strict"
