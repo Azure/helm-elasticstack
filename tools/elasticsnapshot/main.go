@@ -161,6 +161,7 @@ func (*statusCmd) Usage() string {
 
 func (s *statusCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
 	snapshotURL := buildSnapshotURL(s.host, s.port, s.repository, s.snapshot)
+	snapshotURL = snapshotURL + "/_status"
 
 	req, err := http.NewRequest(http.MethodGet, snapshotURL, nil)
 	if err != nil {

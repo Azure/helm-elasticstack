@@ -133,7 +133,7 @@ var _ = Describe("The elasticsnapshot client", func() {
 		It("should run without basic auth", func() {
 			server.AppendHandlers(
 				ghttp.CombineHandlers(
-					ghttp.VerifyRequest("GET", snapshotEndpoint+"/"+snapshotRepository+"/"+snapshotName),
+					ghttp.VerifyRequest("GET", snapshotEndpoint+"/"+snapshotRepository+"/"+snapshotName+"/_status"),
 					ghttp.RespondWith(http.StatusOK, statusResponse),
 				),
 			)
@@ -154,7 +154,7 @@ var _ = Describe("The elasticsnapshot client", func() {
 		It("should run with basic auth", func() {
 			server.AppendHandlers(
 				ghttp.CombineHandlers(
-					ghttp.VerifyRequest("GET", snapshotEndpoint+"/"+snapshotRepository+"/"+snapshotName),
+					ghttp.VerifyRequest("GET", snapshotEndpoint+"/"+snapshotRepository+"/"+snapshotName+"/_status"),
 					ghttp.RespondWith(http.StatusOK, statusResponse),
 				),
 			)
