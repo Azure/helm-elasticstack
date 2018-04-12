@@ -137,7 +137,7 @@ func (c *createCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}
 		return subcommands.ExitFailure
 	}
 
-	fmt.Printf("Created snapshot: %s/%s", c.repository, c.snapshot)
+	fmt.Printf("Start creating snapshot: %s/%s", c.repository, c.snapshot)
 	return subcommands.ExitSuccess
 }
 
@@ -151,12 +151,20 @@ type statusCmd struct {
 
 func (*statusCmd) Name() string { return "status" }
 func (*statusCmd) Synopsis() string {
-	return "retrieves the status of a snapshot"
+	return "retrieves the status of an Elasticsearch snapshot"
 }
 func (*statusCmd) Usage() string {
 	return `status [-host] <host name> [-port] <port> [-repository] <repository-name> [-snapshot] <snapshot name> [-auth-file] <path to basic auth file>
-        Retrieves the status of a snapshot
+        Retrieves the status of an Elasticsearch snapshot
 	`
+}
+
+func (s *statusCmd) SetFlags(f *flag.FlagSet) {
+	f.StringVar(&s.host, "host", "localhost", "Host name of the Elasticsearch API")
+	f.IntVar(&s.port, "port", 9200, "Port of the Elastisearch API")
+	f.StringVar(&s.repository, "repository", "", "Repository name where the snapshot is created")
+	f.StringVar(&s.snapshot, "snapshot", "", "Snapshot name")
+	f.StringVar(&s.authFile, "auth-file", "", "Path to basic auth file")
 }
 
 func (s *statusCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
@@ -203,19 +211,73 @@ func (s *statusCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}
 	return subcommands.ExitSuccess
 }
 
-func (s *statusCmd) SetFlags(f *flag.FlagSet) {
-	f.StringVar(&s.host, "host", "localhost", "Host name of the Elasticsearch API")
-	f.IntVar(&s.port, "port", 9200, "Port of the Elastisearch API")
-	f.StringVar(&s.repository, "repository", "", "Repository name where the snapshot is created")
-	f.StringVar(&s.snapshot, "snapshot", "", "Snapshot name")
-	f.StringVar(&s.authFile, "auth-file", "", "Path to basic auth file")
+type restoreCmd struct {
+	host       string
+	port       int
+	repository string
+	snapshot   string
+	authFile   string
 }
+
+func (*restoreCmd) Name() string { return "restore" }
+func (*restoreCmd) Synopsis() string {
+	return "restore an entire Elasticsearch cluster snapshot from Azure storage"
+}
+func (*restoreCmd) Usage() string {
+	return `status [-host] <host name> [-port] <port> [-repository] <repository-name> [-snapshot] <snapshot name> [-auth-file] <path to basic auth file>
+        Restore an entire Elasticsearch cluster snapshot from Azure storage
+	`
+}
+
+func (r *restoreCmd) SetFlags(f *flag.FlagSet) {
+	f.StringVar(&r.host, "host", "localhost", "Host name of the Elasticsearch API")
+	f.IntVar(&r.port, "port", 9200, "Port of the Elastisearch API")
+	f.StringVar(&r.repository, "repository", "", "Repository name where the snapshot is created")
+	f.StringVar(&r.snapshot, "snapshot", "", "Snapshot name")
+	f.StringVar(&r.authFile, "auth-file", "", "Path to basic auth file")
+}
+
+func (r *restoreCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
+	snapshotURL := buildSnapshotURL(r.host, r.port, r.repository, r.snapshot)
+	snapshotURL = snapshotURL + "/_restore"
+
+	req, err := http.NewRequest(http.MethodPost, snapshotURL, nil)
+	if err != nil {
+		fmt.Printf("Failed to build the HTTP request. Error: %v\n", err)
+		return subcommands.ExitFailure
+	}
+
+	err = setBasicAuth(req, r.authFile)
+	if err != nil {
+		fmt.Println("Failed to set the basic authentication header")
+		return subcommands.ExitFailure
+	}
+
+	client := buildHTTPClient()
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Printf("Failed to restore snapshot. Error: %v", err)
+		return subcommands.ExitFailure
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		content, _ := ioutil.ReadAll(resp.Body) // #nosec
+		fmt.Printf("Failed to restore the snapshot.\n Status Code: %d\n Error Message: %s\n", resp.StatusCode, string(content))
+		return subcommands.ExitFailure
+	}
+
+	fmt.Printf("Start restoring snapshot: %s/%s", r.repository, r.snapshot)
+	return subcommands.ExitSuccess
+}
+
 func main() {
 	subcommands.Register(subcommands.HelpCommand(), "")
 	subcommands.Register(subcommands.FlagsCommand(), "")
 	subcommands.Register(subcommands.CommandsCommand(), "")
 	subcommands.Register(&createCmd{}, "")
 	subcommands.Register(&statusCmd{}, "")
+	subcommands.Register(&restoreCmd{}, "")
 
 	flag.Parse()
 	ctx := context.Background()
