@@ -16,6 +16,7 @@ matrix:
         - cd tools/elasticlicense && make test && cd ../../
         - cd tools/elastictemplate && make test && cd ../../
         - cd tools/elasticwatcher && make test && cd ../../
+        - cd tools/elasticsnapshot && make test && cd ../../
 
     - language: generic
       env:
