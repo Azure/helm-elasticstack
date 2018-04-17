@@ -21,9 +21,15 @@ import (
 // AzureSnapshotType snapshot type for Azure storage
 const AzureSnapshotType = "azure"
 
+// RepositorySettings azure repository settings
+type RepositorySettings struct {
+	Account string `json:"account"`
+}
+
 // SnapshotSettings snapshot settings
 type SnapshotSettings struct {
-	Type string `json:"type"`
+	Type     string             `json:"type"`
+	Settings RepositorySettings `json:"settings"`
 }
 
 // BasicAuth basic authentication credentials
@@ -34,6 +40,10 @@ type BasicAuth struct {
 
 func buildSnapshotURL(host string, port int, repository string, snapshot string) string {
 	return fmt.Sprintf("http://%s:%d/_snapshot/%s/%s", host, port, repository, snapshot)
+}
+
+func buildSnapshotRepositoryURL(host string, port int, repository string) string {
+	return fmt.Sprintf("http://%s:%d/_snapshot/%s", host, port, repository)
 }
 
 func buildHTTPClient() *http.Client {
@@ -72,6 +82,7 @@ type createCmd struct {
 	host       string
 	port       int
 	repository string
+	account    string
 	snapshot   string
 	verify     bool
 	authFile   string
@@ -82,7 +93,7 @@ func (*createCmd) Synopsis() string {
 	return "create a new snapshot of the entire Elasticsearch cluster in an Azure storage"
 }
 func (*createCmd) Usage() string {
-	return `create [-host] <host name> [-port] <port> [-repository] <repository-name> [-snapshot] <snapshot name> [-auth-file] <path to basic auth file> [-verify] <true/false>
+	return `create [-host] <host name> [-port] <port> [-repository] <repository-name> [-account] <azure-storage-account> [-snapshot] <snapshot name> [-auth-file] <path to basic auth file> [-verify] <true/false>
         Create a new snapshot of the entire Elasticsearch cluster in an Azure storage
 	`
 }
@@ -92,18 +103,22 @@ func (c *createCmd) SetFlags(f *flag.FlagSet) {
 	f.IntVar(&c.port, "port", 9200, "Port of the Elastisearch API")
 	f.StringVar(&c.repository, "repository", "", "Repository name where the snapshot is created")
 	f.StringVar(&c.snapshot, "snapshot", "", "Snapshot name")
+	f.StringVar(&c.account, "account", "", "Azure storage account name")
 	f.BoolVar(&c.verify, "verify", false, "Enable the repository verification")
 	f.StringVar(&c.authFile, "auth-file", "", "Path to basic auth file")
 }
 
 func (c *createCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-	snapshotURL := buildSnapshotURL(c.host, c.port, c.repository, c.snapshot)
+	respositoryURL := buildSnapshotRepositoryURL(c.host, c.port, c.repository)
 	if !c.verify {
-		snapshotURL = snapshotURL + "?verify=false"
+		respositoryURL = respositoryURL + "?verify=false"
 	}
 
 	settings := &SnapshotSettings{
 		Type: AzureSnapshotType,
+		Settings: RepositorySettings{
+			Account: c.account,
+		},
 	}
 	reqBody, err := json.Marshal(&settings)
 	if err != nil {
@@ -111,9 +126,9 @@ func (c *createCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}
 		return subcommands.ExitFailure
 	}
 
-	req, err := http.NewRequest(http.MethodPut, snapshotURL, bytes.NewBuffer(reqBody))
+	req, err := http.NewRequest(http.MethodPut, respositoryURL, bytes.NewBuffer(reqBody))
 	if err != nil {
-		fmt.Printf("Failed to build the HTTP request. Error: %v\n", err)
+		fmt.Printf("Failed to build the HTTP request. Error %v\n", err)
 		return subcommands.ExitFailure
 	}
 
@@ -125,6 +140,32 @@ func (c *createCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}
 
 	client := buildHTTPClient()
 	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Printf("Failed to create the snapshot repository request. Error: %v\n", err)
+		return subcommands.ExitFailure
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		content, _ := ioutil.ReadAll(resp.Body) // #nosec
+		fmt.Printf("Failed to create the snapshot repository.\n Status Code: %d\n Error Message: %s\n", resp.StatusCode, string(content))
+		return subcommands.ExitFailure
+	}
+
+	snapshotURL := buildSnapshotURL(c.host, c.port, c.repository, c.snapshot)
+	req, err = http.NewRequest(http.MethodPut, snapshotURL, bytes.NewBuffer(reqBody))
+	if err != nil {
+		fmt.Printf("Failed to build the HTTP request. Error: %v\n", err)
+		return subcommands.ExitFailure
+	}
+
+	err = setBasicAuth(req, c.authFile)
+	if err != nil {
+		fmt.Println("Failed to set the basic authentication header")
+		return subcommands.ExitFailure
+	}
+
+	resp, err = client.Do(req)
 	if err != nil {
 		fmt.Printf("Failed to create snapshot request. Error: %v", err)
 		return subcommands.ExitFailure

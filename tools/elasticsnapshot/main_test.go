@@ -28,7 +28,8 @@ var _ = Describe("The elasticsnapshot client", func() {
 	const snapshotRepository = "repository"
 	const snapshotEndpoint = "/_snapshot"
 	const snapshotQuery = "verify=false"
-	const snapshotBody = "{\"type\":\"azure\"}"
+	const snapshotSorageAccount = "storage_account"
+	const snapshotBody = "{\"type\":\"azure\",\"settings\":{\"account\":\"storage_account\"}}"
 	const statusResponse = "{\"state\": \"IN_PROGRESS\"}"
 	const Username = "test"
 	const Password = "test"
@@ -66,7 +67,12 @@ var _ = Describe("The elasticsnapshot client", func() {
 		It("should run without basic auth", func() {
 			server.AppendHandlers(
 				ghttp.CombineHandlers(
-					ghttp.VerifyRequest("PUT", snapshotEndpoint+"/"+snapshotRepository+"/"+snapshotName, snapshotQuery),
+					ghttp.VerifyRequest("PUT", snapshotEndpoint+"/"+snapshotRepository, snapshotQuery),
+					ghttp.VerifyBody([]byte(snapshotBody)),
+					ghttp.RespondWith(http.StatusOK, nil),
+				),
+				ghttp.CombineHandlers(
+					ghttp.VerifyRequest("PUT", snapshotEndpoint+"/"+snapshotRepository+"/"+snapshotName),
 					ghttp.VerifyBody([]byte(snapshotBody)),
 					ghttp.RespondWith(http.StatusCreated, nil),
 				),
@@ -77,18 +83,25 @@ var _ = Describe("The elasticsnapshot client", func() {
 				port:       elasticPort,
 				snapshot:   snapshotName,
 				repository: snapshotRepository,
+				account:    snapshotSorageAccount,
 				authFile:   ""}
 
 			exitStatus := cmd.Execute(nil, nil)
 
 			Expect(exitStatus).Should(Equal(subcommands.ExitSuccess))
-			Expect(server.ReceivedRequests()).Should(HaveLen(1))
+			Expect(server.ReceivedRequests()).Should(HaveLen(2))
 		})
 
 		It("should run with basic auth", func() {
 			server.AppendHandlers(
 				ghttp.CombineHandlers(
-					ghttp.VerifyRequest("PUT", snapshotEndpoint+"/"+snapshotRepository+"/"+snapshotName, snapshotQuery),
+					ghttp.VerifyRequest("PUT", snapshotEndpoint+"/"+snapshotRepository, snapshotQuery),
+					ghttp.VerifyBody([]byte(snapshotBody)),
+					ghttp.RespondWith(http.StatusOK, nil),
+					ghttp.VerifyBasicAuth(Username, Password),
+				),
+				ghttp.CombineHandlers(
+					ghttp.VerifyRequest("PUT", snapshotEndpoint+"/"+snapshotRepository+"/"+snapshotName),
 					ghttp.VerifyBody([]byte(snapshotBody)),
 					ghttp.RespondWith(http.StatusCreated, nil),
 					ghttp.VerifyBasicAuth(Username, Password),
@@ -103,12 +116,13 @@ var _ = Describe("The elasticsnapshot client", func() {
 				port:       elasticPort,
 				snapshot:   snapshotName,
 				repository: snapshotRepository,
+				account:    snapshotSorageAccount,
 				authFile:   authFile}
 
 			exitStatus := cmd.Execute(nil, nil)
 
 			Expect(exitStatus).Should(Equal(subcommands.ExitSuccess))
-			Expect(server.ReceivedRequests()).Should(HaveLen(1))
+			Expect(server.ReceivedRequests()).Should(HaveLen(2))
 		})
 	})
 
