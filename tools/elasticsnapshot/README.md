@@ -49,14 +49,14 @@ A snapshot of the Elasticsearch cluster can be created in Azure storage with the
 
 ```bash
 elasticsnapshot create -host=<ELASTICSEARCH-HOST> -port=<ELASTICSEARCH-PORT> \
--auth-file=auth-file.json -respository <REPOSITORY-NAME> -snapshot <SNAPSHOT-NAME>
+-auth-file=auth-file.json -respository <REPOSITORY-NAME> -snapshot <SNAPSHOT-NAME> -account <STROAGE_ACCOUNT>
 ```
 
 or run the tool in a docker container:
 
 ```bash
 docker run --rm -v ${PWD}:/config -t mseoss/elasticsnapshot create -host=<ELASTICSEARCH-HOST> \
--port=<ELASTICSEARCH-PORT> -auth-file=/config/auth-file.json -respository <REPOSITORY-NAME> -snapshot <SNAPSHOT-NAME>
+-port=<ELASTICSEARCH-PORT> -auth-file=/config/auth-file.json -respository <REPOSITORY-NAME> -snapshot <SNAPSHOT-NAME> -account <STROAGE_ACCOUNT>
 ```
 
 The snapshot will be created asynchronously. You can retrieve the status of the snapshot in order to check if the snapshot is being created.
