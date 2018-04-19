@@ -6,4 +6,3 @@ metadata:
 data:
   elasticsearch.yml: |
 {{ include (print .Template.BasePath "/config/_elasticsearch.yaml") . | indent 4 }}
-{{ include (print .Template.BasePath "/config/_azure_storage.yaml") . | indent 4 }}
