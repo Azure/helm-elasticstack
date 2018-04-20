@@ -37,11 +37,19 @@ The chart can be installed with the `deploy.sh` script. An environment and names
 ./deploy.sh -e acs -n elk
 ```
 
-Alternatively you can also installed automatically the [Elasticsearch x-pack license](https://license.elastic.co/download) after the deployment. First you need to activate the 
+Alternatively you can also install automatically the [Elasticsearch x-pack license](https://license.elastic.co/download) after the deployment. First you need to activate the 
 license installation in [Helm values](charts/elasticserch/environments/acs/values.yaml) by setting the `license.install=true` and you may also want to enable the `x-pack features` in [Elasticsearch config](charts/elasticsearch/templates/config.config.yaml).
 
+Before starting the deployment, you just need to add the license to an Azure KeyVault using the Azure CLI as follows:
+
 ```console
-./deploy.sh -e acs -n elk -l license.json
+az keyvault secret set --name elasticsearch-license --vault-name <KEYVAULT_NAME> --value $(cat license.json)
+```
+
+You can install now the chart along with the license by simply providing the KeyVault name to the deployment script.
+
+```console
+./deploy.sh -e acs -n elk -v <KEYVAULT_NAME>
 ```
 
 ## Uninstalling the Chart
