@@ -12,7 +12,7 @@ Plugins:
 The `VERSION` environment variable defines the version of the logstash base image.
 
 ```
-export VERSION=6.2.3
+export VERSION=6.2.4
 docker build -t mseoss/logstash:${VERSION} --build-arg VERSION=${VERSION} .
 docker push mseoss/logstash:${VERSION}
 ```

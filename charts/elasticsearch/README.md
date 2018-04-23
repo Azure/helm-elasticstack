@@ -14,7 +14,7 @@ The following table lists some of the configurable parameters of the `elasticsea
 | Parameter                                      | Description                               | Default                                                   |
 | ---------------------------------------------- | ----------------------------------------  | --------------------------------------------------------- |
 | `image.repository`                             | elasticsearch image with Azure repository | `mseoss/elasticsearch`                                    |
-| `image.tag`                                    | specify image tag                         | `6.2.3`                                                   |
+| `image.tag`                                    | specify image tag                         | `6.2.4`                                                   |
 | `image.pullSecrets`                            | specify image pull secrets                | `nil` (does not add image pull secrets to deployed pods)  |
 | `image.pullPolicy`                             | image pull policy                         | `Always`                                                  |
 | `license.install`                              | install x-pack license                    | `false`                                                   |

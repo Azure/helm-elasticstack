@@ -10,7 +10,7 @@ Plugins:
 The `VERSION` environment variable defines the version of the elasticsearch base image.
 
 ```
-export VERSION=6.2.3
+export VERSION=6.2.4
 docker build -t mseoss/elasticsearch:${VERSION} --build-arg VERSION=${VERSION} .
 docker push mseoss/elasticsearch:${VERSION}
 ```

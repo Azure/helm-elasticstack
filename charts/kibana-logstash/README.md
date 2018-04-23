@@ -14,13 +14,13 @@ The following table lists some of the configurable parameters of the `kibana-log
 | `image.pullPolicy`                             | General image pull policy                                           | `Always`                                                               |
 | `image.pullSecrets`                            | General image pull secrets                                          | `nil` (does not add image pull secrets to deployed pods)               |
 | `kibana.image.repository`                      | Kibana image                                                        | `docker.elastic.co/kibana/kibana`                                      |
-| `kibana.image.tag`                             | Kibana image tag                                                    | `6.2.3`                                                                |
+| `kibana.image.tag`                             | Kibana image tag                                                    | `6.2.4`                                                                |
 | `kibana.replicas`                              | Number of Kibana instances started                                  | `3`                                                                    |
 | `kibana.ingress.host`                          | Kibana DNS domain                                                   | `nil` (must be provided during installation)                           |
 | `kibana.ingress.public.cert`                   | Kibana public TLS certificate                                       | `nil` (must be provided during installation)                           |
 | `kibana.ingress.private.key`                   | Kibana private TLS key                                              | `nil` (must be provided during installation)                           |
 | `logstash.image.repository`                    | Logstash image                                                      | `mseoss/logstash`                                                      |
-| `logstah.image.tag`                            | Logstash image tag                                                  | `6.2.3`                                                                |
+| `logstah.image.tag`                            | Logstash image tag                                                  | `6.2.4`                                                                |
 | `logstah.replicas`                             | Number of Logtash instances started                                 | `3`                                                                    |
 | `logstah.queue.storageclass`                   | Storage class used for Logstash queue PV                            | `default`                                                              |
 | `logstah.queue.distk_capacity`                 | Disk capacity of Logstash queue PV                                  | `50Gi`                                                                 |

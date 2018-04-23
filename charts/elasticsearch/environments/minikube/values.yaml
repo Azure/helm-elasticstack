@@ -1,6 +1,6 @@
 image:
   repository: mseoss/elasticsearch
-  tag: 6.2.3
+  tag: 6.2.4
   pullPolicy: Always
 
 license:
