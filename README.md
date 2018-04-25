@@ -159,16 +159,6 @@ stunnel:
         port: 6378
 ```
 
-You also need to add in the deployment script, the Azure Key Vault secret names where the Redis Key of each connection is stored. They can be added in the environment specific secrets:
-
-```console
-
-# acs environment specific secrets
-declare -A redis_key_secrets_acs
-redis_key_secrets_acs['env1']='logstash-env1-redis-key'
-redis_key_secrets_acs['env2']='logstash-env2-redis-key'
-```
-
 ## Indexes Clean Up
 
 The old indexes are cleaned up by the [Curator](https://github.com/elastic/curator) tool which is executed daily by a cron job. Its configuration is available in [curator-actions.yaml](charts/kibana-logstash/templates/config/curator-actions.yaml) file. You should adjust it according with your needs.
