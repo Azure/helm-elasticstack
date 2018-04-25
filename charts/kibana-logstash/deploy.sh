@@ -9,26 +9,46 @@ current_dir="$(dirname $0)"
 source "$current_dir/../../scripts/util.sh"
 source "$current_dir/../../scripts/keyvault.sh"
 
+# Parse YAML file
+#
+# Based on https://gist.github.com/briantjacobs/7753bf
+function parse_yaml() {
+    local prefix=$2
+    local s
+    local w
+    local fs
+    s='[[:space:]]*'
+    w='[a-zA-Z0-9_]*'
+    fs="$(echo @|tr @ '\034')"
+    sed -ne "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
+        -e "s|^\($s\)\($w\)$s[:-]$s\(.*\)$s\$|\1$fs\2$fs\3|p" "$1" |
+        awk -F"$fs" '{
+    indent = length($1)/2;
+    vname[indent] = $2;
+    for (i in vname) {if (i > indent) {delete vname[i]}}
+        if (length($3) > 0) {
+            vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+            printf("%s%s%s=(\"%s\")\n", "'"$prefix"'",vn, $2, $3);
+        }
+    }' | sed 's/_=/+=/g'
+}
 
-# Configures the Helm parameters which are environment specific
+# Retrieves the Redis keys of all given clusters from Azure KeyVault and configured them as Helm variables
 # Arguments:
-# $1 - environment name
-function get_environment_params() {
-    environment=$1
+# $1 - KeyVault name
+# $2 - List with Redis cluster names. The access key of a cluster should be stored in KeyVault with the secret
+# name 'logstash-${cluster}-redis-key'
+function get_redis_keys() {
+    keyvault=$1
+    redis_clusters=("$@")
     params=""
-    case $environment in
-        'acs')
-            for env in "${!redis_key_secrets_acs[@]}"; do
-                logstash_redis_key=$(get_secret $KEYVAULT_NAME ${redis_key_secrets_acs[$env]})
-                check_rc "Failed to fetch from KeyVault the Redis Key for '$env' environment"
-                params+=" --set stunnel.connections.$env.redis.key=${logstash_redis_key}"
-            done
-            ;;
-        *)
-            echo "Environment '$environment' not supported!"
-            exit 1
-            ;;
-    esac
+
+    for cluster in "${redis_clusters[@]}"; do
+        redis_key_secret="logstash-${cluster}-redis-key"
+        redis_key=$(get_secret ${keyvault} ${redis_key_secret})
+        check_rc "Failed to fetch from KeyVault the redis key '${redis_key_secret}'"
+        params+=" --set stunnel.connections.${cluster}.redis.key=${redis_key}"
+    done
 
     echo $params
 }
@@ -61,10 +81,6 @@ KIBANA_OAUTH_COOKIE_SECRET='kibana-oauth-cookie-secret'
 KIBANA_OAUTH_CLIENT_ID='kibana-oauth-client-id'
 KIBANA_OAUTH_CLIENT_SECRET='kibana-oauth-client-secret'
 ELASTICSEARCH_WATCHER_WEBHOOK_TEAMS='elasticsearch-watcher-webhook-teams'
-
-# acs environment specific secrets
-declare -A redis_key_secrets_acs
-redis_key_secrets_acs['dev']='logstash-dev-redis-key'
 
 while getopts hd:e:tn:v: opt; do
     case $opt in
@@ -160,9 +176,12 @@ then
     check_rc "Failed to fetch from KeyVault the Elasticsearch Watcher webhook teams"
     helm_params+=" --set watcher.webhooks.teams=${elasticsearch_watcher_webhook_teams}"
 
-    # Get the environment specific parameters
-    echo "  Fetching '$ENVIRONMENT' environemnt specific secrets"
-    helm_params+=" $(get_environment_params $ENVIRONMENT)"
+    # Fetch from KeyVault the Redis keys
+    echo "  Fetching Redis keys"
+    redis_connections=$(parse-yaml environments/${ENVIRONMENT}/values.yaml | grep stunnel_connections \
+                            | awk -F'_' '{print $3}' | uniq | tr '\n' ' ')
+    redis_clusters=(${redis_connections})
+    helm_params+=" $(get_redis_keys $KEYVAULT_NAME ${redis_clusters[@]})"
 fi
 
 # Installing helm chart
