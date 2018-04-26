@@ -26,12 +26,11 @@ CHART_NAME="elasticsearch"
 RELEASE_NAME="elasticsearch"
 ENVIRONMENT='acs'
 NAMESPACE='elk'
-LICENSE=''
 KEYVAULT_NAME=''
 ELASTICSEARCH_LICENSE_SECRET='elasticsearch-license'
 DRY_RUN=false
 
-while getopts he:l:tn:r:v: opt; do
+while getopts he:tn:r:v: opt; do
     case $opt in
         h)
             show_help
@@ -39,9 +38,6 @@ while getopts he:l:tn:r:v: opt; do
             ;;
         e)
             ENVIRONMENT=$OPTARG
-            ;;
-        l)
-            LICENSE=$OPTARG
             ;;
         t)
             DRY_RUN=true
