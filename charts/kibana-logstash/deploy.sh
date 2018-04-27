@@ -40,6 +40,7 @@ function parse_yaml() {
 # name 'logstash-${cluster}-redis-key'
 function get_redis_keys() {
     keyvault=$1
+    shift
     redis_clusters=("$@")
     params=""
 
@@ -178,7 +179,7 @@ then
 
     # Fetch from KeyVault the Redis keys
     echo "  Fetching Redis keys"
-    redis_connections=$(parse-yaml environments/${ENVIRONMENT}/values.yaml | grep stunnel_connections \
+    redis_connections=$(parse_yaml environments/${ENVIRONMENT}/values.yaml | grep stunnel_connections \
                             | awk -F'_' '{print $3}' | uniq | tr '\n' ' ')
     redis_clusters=(${redis_connections})
     helm_params+=" $(get_redis_keys $KEYVAULT_NAME ${redis_clusters[@]})"
