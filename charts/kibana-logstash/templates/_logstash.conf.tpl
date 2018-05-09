@@ -33,18 +33,21 @@ output {
         hosts => ["elasticsearch:9200"]
         index => "{{ $environment }}-haproxy-%{+YYYY.MM.dd}"
         manage_template => false
+        document_type => "haproxy"
       }
     } if [type] == "syslog" {
       elasticsearch {
         hosts => ["elasticsearch:9200"]
         index => "{{ $environment }}-syslog-%{+YYYY.MM.dd}"
         manage_template => false
+        document_type => "syslog"
       }
     } else {
       elasticsearch {
         hosts => ["elasticsearch:9200"]
         index => "{{ $environment }}-logstash-%{+YYYY.MM.dd}"
         manage_template => false
+        document_type => "logstash-input"
       }
   }
   }
