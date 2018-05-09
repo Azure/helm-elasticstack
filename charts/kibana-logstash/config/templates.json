@@ -6,61 +6,56 @@
         "order": 0,
         "template": "*-logstash-*",
         "settings": {
-            "number_of_shards" : 1
+          "index.mapping.ignore_malformed": "true",
+          "routing.allocation.total_shards_per_node": 2
         },
         "mappings": {
           "_default_": {
-            "dynamic": "strict"
+            "dynamic": true
           },
           "logstash-input": {
-            "dynamic": "strict",
             "properties": {
-              "type": {
-                "type": "keyword",
-                "index": true
+              "@timestamp": {
+                "type": "date"
               },
-              "username": {
-                "type": "keyword",
-                "index": true
+              "@version": {
+                "type": "long"
               },
-              "stack_trace": {
-                "type": "text",
-                "index": true
-              },
-              "level": {
-                "type": "keyword",
-                "index": true
-              },
-              "hostname": {
-                "type": "keyword",
-                "index": true
-              },
-              "message": {
-                "type": "text",
-                "index": true
+              "count": {
+                "type": "long"
               },
               "duration": {
                 "type": "long"
               },
-              "description": {
-                "type": "keyword",
-                "index": true,
-                "doc_values": "true"
+              "id": {
+                "type": "long"
               },
-              "name": {
-                "type": "keyword",
-                "index": true,
-                "doc_values": "true"
+              "logger_name": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
               },
-              "exception-message": {
-                "type": "keyword",
-                "index": true,
-                "doc_values": "true"
+              "message": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
               },
-              "stacktrace": {
-                "type": "keyword",
-                "index": true,
-                "doc_values": "true"
+              "method": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
               }
             }
           }
