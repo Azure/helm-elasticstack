@@ -5,4 +5,4 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   elasticsearch.yml: |
-{{ include (print .Template.BasePath "/config/_elasticsearch.yaml") . | indent 4 }}
+{{ include (print .Template.BasePath "/_elasticsearch.yaml.tpl") . | indent 4 }}

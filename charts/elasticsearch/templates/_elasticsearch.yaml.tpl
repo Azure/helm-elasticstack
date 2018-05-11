@@ -32,6 +32,6 @@ discovery:
 
 xpack:
   security:
-    enabled: false
+    enabled: {{ .Values.xpack.security | default false }}
   monitoring:
-    enabled: false
+    enabled: {{ .Values.xpack.monitoring | default false }}

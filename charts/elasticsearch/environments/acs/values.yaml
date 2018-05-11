@@ -11,6 +11,10 @@ license:
     pullPolicy: Always
   value:
 
+xpack:
+  security: false
+  monitoring: false
+
 es_cluster:
   name: &CLUSTER_NAME "es-cluster"
   plugins: "x-pack"
