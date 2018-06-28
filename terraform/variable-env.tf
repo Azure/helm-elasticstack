@@ -19,3 +19,7 @@ variable "cluster_environment"{
     type="String"
 }
 
+variable "agent_username"{
+    type="String"
+}
+
