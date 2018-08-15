@@ -44,7 +44,7 @@ It is recommended that you use two different principals to operate the Key Vault
 You can configure the access policies for these principals as follows:
 
 ```console
-az keyvault set-policy --upn <SECURITY_OPERATOR_USER_PRINCIPAL> --name <KEYVAULT_NAME> --resource-group <RESOURCE_GROUP> --certificate-premissions create delete get import list update --key-permissions create delete get import list update --secret-permissions get delete list set
+az keyvault set-policy --upn <SECURITY_OPERATOR_USER_PRINCIPAL> --name <KEYVAULT_NAME> --resource-group <RESOURCE_GROUP> --certificate-permissions create delete get import list update --key-permissions create delete get import list update --secret-permissions get delete list set
 
 az keyvault set-policy --upn <DEPLOYMENT_OPERATOR_USER_PRINCIPAL> --name <KEYVAULT_NAME> --resource-group <RESOURCE_GROP> --secret-permissions get list
 ```
