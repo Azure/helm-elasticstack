@@ -7,7 +7,7 @@ matrix:
         - tip
       install:
         - go get -u github.com/golang/lint/golint
-        - go get github.com/GoASTScanner/gas/cmd/gas/...
+        - go get github.com/securego/gosec/cmd/gosec/...
         - go get -u github.com/Masterminds/glide
         - go get -u github.com/onsi/ginkgo/ginkgo
         - go get -u github.com/onsi/gomega
