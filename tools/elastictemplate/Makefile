@@ -12,7 +12,7 @@ test: bootstrap
 	test -z '$(FMT_CMD)'
 	go vet $(go list ./... | grep -v /vendor/)
 	golint -set_exit_status $(shell go list ./... | grep -v vendor)
-	gas ./...
+	gosec ./...
 	ginkgo -r -v
 bootstrap:
 	glide install
