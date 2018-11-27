@@ -2,10 +2,10 @@
 
 ## Versions
 
-| helm chart version | elastic stack version |
-|--------------------|-----------------------|
-| v1.1.0             | 6.4.3                 |
-| v1.0.0             | 6.2.4                 |
+| helm chart version | elastic stack version | tag                                                                      |
+|--------------------|-----------------------|--------------------------------------------------------------------------|
+| 1.1.0              | 6.4.3                 |[v1.1.0](https://github.com/Azure/helm-elasticstack/blob/v1.1.0/README.md)|
+| 1.0.0              | 6.2.4                 |[v1.0.0](https://github.com/Azure/helm-elasticstack/blob/v1.0.0/README.md)|
 
 ## Introduction
 
