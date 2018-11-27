@@ -1,4 +1,13 @@
-# Introduction
+# helm-elasticstack
+
+## Versions
+
+| helm chart version | elastic stack version |
+|--------------------|-----------------------|
+| v1.1.0             | 6.4.3                 |
+| v1.0.0             | 6.2.4                 |
+
+## Introduction
 
 [![Build Status](https://travis-ci.org/Azure/helm-elasticstack.svg?branch=master)](https://travis-ci.org/Azure/helm-elasticstack)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Azure/helm-elasticstack)](https://goreportcard.com/report/github.com/Azure/helm-elasticstack)
