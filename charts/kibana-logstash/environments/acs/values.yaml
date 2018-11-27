@@ -4,7 +4,7 @@ image:
 kibana:
   image:
     repository: docker.elastic.co/kibana/kibana 
-    tag       : 6.2.4
+    tag       : 6.4.3
   replicas: 3
   env_var:
     ELASTICSEARCH_URL: "http://elasticsearch:9200"
@@ -28,7 +28,7 @@ kibana:
 logstash:
   image:
     repository: mseoss/logstash
-    tag       : 6.2.4
+    tag       : 6.4.3
   replicas: 3
   queue:
     storageclass: default

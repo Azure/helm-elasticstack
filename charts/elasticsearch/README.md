@@ -1,3 +1,5 @@
+# Elasticsearch helm chart
+
 ## Introduction
 
 This chart bootstraps an [Elasticsearch cluster](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html) on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
@@ -5,7 +7,8 @@ This chart bootstraps an [Elasticsearch cluster](https://www.elastic.co/guide/en
 It is based on [clockworksoul/helm-elasticsearch](https://github.com/clockworksoul/helm-elasticsearch) chart.
 
 ## Prerequisites
- - Kubernetes 1.8+ e.g. deployed with [Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes)
+
+- Kubernetes 1.8+ e.g. deployed with [Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes)
 
 ## Configuration
 
@@ -14,7 +17,7 @@ The following table lists some of the configurable parameters of the `elasticsea
 | Parameter                                      | Description                               | Default                                                   |
 | ---------------------------------------------- | ----------------------------------------  | --------------------------------------------------------- |
 | `image.repository`                             | elasticsearch image with Azure repository | `mseoss/elasticsearch`                                    |
-| `image.tag`                                    | specify image tag                         | `6.2.4`                                                   |
+| `image.tag`                                    | specify image tag                         | `6.4.3`                                                   |
 | `image.pullSecrets`                            | specify image pull secrets                | `nil` (does not add image pull secrets to deployed pods)  |
 | `image.pullPolicy`                             | image pull policy                         | `Always`                                                  |
 | `license.install`                              | install x-pack license                    | `false`                                                   |

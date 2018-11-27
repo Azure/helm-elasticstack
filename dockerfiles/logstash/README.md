@@ -3,25 +3,26 @@
 Docker image based on official [Logstash image](https://www.elastic.co/guide/en/logstash/current/docker.html) with some extra plugins installed.
 
 Plugins:
+
 * logstash-input-redis
 * logstash-output-elasticsearch
 * logstash-output-csv
 
-# Build
+## Build
 
 The `VERSION` environment variable defines the version of the logstash base image.
 
-```
-export VERSION=6.2.4
+```bash
+export VERSION=6.4.3
 docker build -t mseoss/logstash:${VERSION} --build-arg VERSION=${VERSION} .
 docker push mseoss/logstash:${VERSION}
 ```
 
-# Run
+## Run
 
 Logstash image can be started for testing with the following command:
 
-```
+```bash
 docker run --rm -it -v ~/pipeline/:/usr/share/logstash/pipeline/ mseoss/logstash:${VERSION}
 ```
 
