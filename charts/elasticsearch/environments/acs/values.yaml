@@ -9,7 +9,7 @@ license:
     repository: mseoss/elasticlicense
     tag: latest
     pullPolicy: Always
-  value:
+  value: 
 
 xpack:
   security: false
@@ -55,6 +55,7 @@ es_master:
     NODE_INGEST: false
     NODE_DATA: false
     NODE_MASTER: true
+  tolerations: []
 
 es_client:
   replicas: "3"
@@ -70,6 +71,7 @@ es_client:
     NODE_INGEST: true
     NODE_DATA: false
     NODE_MASTER: false
+  tolerations: []
 
 es_data:
   replicas: "3"
@@ -87,3 +89,4 @@ es_data:
     NODE_INGEST: false
     NODE_DATA: true
     NODE_MASTER: false
+  tolerations: []

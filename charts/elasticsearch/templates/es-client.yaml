@@ -98,3 +98,7 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.image.pullSecret }}
 {{- end }}
+{{- with .Values.es_client.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}

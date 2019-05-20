@@ -96,6 +96,10 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.image.pullSecret }}
 {{- end }}
+{{- with .Values.es_data.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
   volumeClaimTemplates:
   - metadata:
       name: storage
