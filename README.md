@@ -1,5 +1,9 @@
 # helm-elasticstack
 
+## Notice
+
+This project is in maintenance mode. No active development anymore.
+
 ## Versions
 
 | helm chart version | elastic stack version | tag                                                                      |
