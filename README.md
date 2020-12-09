@@ -2,7 +2,7 @@
 
 ## Notice
 
-This project is in maintenance mode. No active development anymore.
+This project is  read-only and [archive](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/archiving-repositories) mode. No active development anymore.
 
 ## Versions
 
